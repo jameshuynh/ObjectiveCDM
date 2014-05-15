@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D8078CEA-D836-47F7-8DB1-F7471C81EE06</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ObjectiveCDM-Example</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1F48D144-D9E4-4F71-9A5F-EF7D757E5F71</key>
+		<string>ssh://github.com/jameshuynh/ObjectiveCDM.git</string>
+		<key>32E579F9-1057-4061-A265-0ED75AC90C56</key>
+		<string>ssh://github.com/JonasGessner/JGDownloadAcceleration.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ObjectiveCDM-Example/ObjectiveCDM-Example.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1F48D144-D9E4-4F71-9A5F-EF7D757E5F71</key>
+		<string>../../..</string>
+		<key>32E579F9-1057-4061-A265-0ED75AC90C56</key>
+		<string>../../../JGDownloadAcceleration</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/jameshuynh/ObjectiveCDM.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1F48D144-D9E4-4F71-9A5F-EF7D757E5F71</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>32E579F9-1057-4061-A265-0ED75AC90C56</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JGDownloadAcceleration</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1F48D144-D9E4-4F71-9A5F-EF7D757E5F71</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RubifyDownloadManager</string>
+		</dict>
+	</array>
+</dict>
+</plist>

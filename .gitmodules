@@ -1,0 +1,3 @@
+[submodule "JGDownloadAcceleration"]
+	path = JGDownloadAcceleration
+	url = git@github.com:JonasGessner/JGDownloadAcceleration.git
