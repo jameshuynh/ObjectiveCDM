@@ -17,7 +17,18 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
-    [objectiveCDM downloadURL:@"http://download.thinkbroadband.com/5MB.zip" to:@"test/test.zip"];
+//    [objectiveCDM downloadBatch:@[
+//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/228/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8398&contentId=228", @"destination":@"test/test.zip"},
+//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/230/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8399&contentId=230", @"destination": @"test/test1.zip"},
+//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/233/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8400&contentId=233", @"destination": @"test/test2.zip"},
+//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/234/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8401&contentId=234", @"destination": @"test/test3.zip"},
+//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/235/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8403&contentId=236", @"destination": @"test/test4.zip"},
+//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/200/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8403&contentId=200", @"destination": @"test/test5.zip"}
+//    ]];
+    
+    [objectiveCDM downloadBatch:@[
+      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/241/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8343&contentId=241", @"destination":@"test/test.zip"}]];
+
     
     return YES;
 }

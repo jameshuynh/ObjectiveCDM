@@ -12,6 +12,7 @@
 @interface ObjectiveCDM : NSObject
 
 + (instancetype) sharedInstance;
+- (void) downloadBatch:(NSArray *)arrayOfDownloadInformation;
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination;
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
 @end

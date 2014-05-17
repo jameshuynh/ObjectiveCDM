@@ -60,9 +60,13 @@
 
 - (void) start {
     for(NSDictionary *dictionary in downloadInputs) {
-        NSLog(@"destintaion %@", dictionary[@"destination"] );
-        JGDownloadOperation *operation = [[JGDownloadOperation alloc] initWithURL:dictionary[@"url"] destinationPath:dictionary[@"destination"] allowResume:YES];
-        [operation setMaximumNumberOfConnections:1];
+        NSLog(@"destintaion %@ & url = %@", dictionary[@"destination"], dictionary[@"url"] );
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:dictionary[@"url"]];
+        //customize the request if needed... Example:
+        [request setTimeoutInterval:90.0];
+
+        JGDownloadOperation *operation = [[JGDownloadOperation alloc] initWithRequest:request destinationPath:dictionary[@"destination"] allowResume:YES];
+        [operation setMaximumNumberOfConnections:6];
         [operation setRetryCount:3];
         
         __block CFTimeInterval started;

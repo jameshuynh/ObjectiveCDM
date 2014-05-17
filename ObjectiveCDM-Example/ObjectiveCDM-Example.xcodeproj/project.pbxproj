@@ -518,6 +518,7 @@
 				1A034E5D19250F4F000685C9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1A034E5E19250F4F000685C9 /* Build configuration list for PBXNativeTarget "ObjectiveCDM-ExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +527,7 @@
 				1A034E6019250F4F000685C9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
