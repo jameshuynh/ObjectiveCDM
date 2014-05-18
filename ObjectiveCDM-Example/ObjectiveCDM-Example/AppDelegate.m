@@ -31,7 +31,7 @@
 //      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/241/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8343&contentId=241", @"destination":@"test/test2.zip"}]];
 
     // [objectiveCDM downloadBatch:@[@{@"url": @"http://casie.projectwebby.com/system/intro_videos/uploaded_videos/000/000/006/original/starhub-low-latency-customer-facing-video-v7-cut-down-2.mp4", @"destination": @"test/video.mp4"}]];
-    [objectiveCDM downloadBatch:@[@{@"url": @"http://www.wswd.net/testdownloadfiles/20MB.zip", @"destination": @"test/test.zip"}]];
+    [objectiveCDM downloadBatch:@[@{@"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip", @"destination": @"test/test.zip"}, @{@"url": @"http://87.76.16.10/test10.zip", @"destination": @"test/test2.zip"}, @{@"url": @"http://mia.futurehosting.com/test.zip", @"destination": @"test/test3.zip"}]];
     
     
     return YES;
