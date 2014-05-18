@@ -26,9 +26,13 @@
 //        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/200/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8403&contentId=200", @"destination": @"test/test5.zip"}
 //    ]];
     
-    [objectiveCDM downloadBatch:@[
-      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/241/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8343&contentId=241", @"destination":@"test/test.zip"}]];
+//    [objectiveCDM downloadBatch:@[
+//      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/228/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8398&contentId=228", @"destination":@"test/test1.zip"},
+//      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/241/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8343&contentId=241", @"destination":@"test/test2.zip"}]];
 
+    // [objectiveCDM downloadBatch:@[@{@"url": @"http://casie.projectwebby.com/system/intro_videos/uploaded_videos/000/000/006/original/starhub-low-latency-customer-facing-video-v7-cut-down-2.mp4", @"destination": @"test/video.mp4"}]];
+    [objectiveCDM downloadBatch:@[@{@"url": @"http://www.wswd.net/testdownloadfiles/20MB.zip", @"destination": @"test/test.zip"}]];
+    
     
     return YES;
 }
