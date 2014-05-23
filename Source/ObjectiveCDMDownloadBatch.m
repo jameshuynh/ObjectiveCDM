@@ -14,9 +14,8 @@
     self = [super init];
     if(self) {
         downloadInputs = [[NSMutableArray alloc] initWithArray:@[]];
-        operationQueue = [[JGOperationQueue alloc] init];
-        operationQueue.handleNetworkActivityIndicator = YES;
-        operationQueue.handleBackgroundTask = YES;
+        urls = [[NSMutableArray alloc] initWithArray:@[]];
+        downloadingProgresses = [[NSMutableArray alloc] initWithArray:@[]];
     }//end if
     return self;
 }
@@ -25,6 +24,8 @@
     if([self isTaskExistWithURL:url andDestination:destination] == NO) {
         [self createFolderForDestination:destination];
         NSDictionary *task = @{@"url": url, @"destination": destination};
+        [urls addObject:[url absoluteString]];
+        [downloadingProgresses addObject:@0];
         [downloadInputs addObject:task];
     }//end if
 }
@@ -34,6 +35,8 @@
     if([self isTaskExistWithURL:url andDestination:destination] == NO) {
         [self createFolderForDestination:destination];
         NSDictionary *task = @{@"url": url, @"destination": destination};
+        [urls addObject:urlString];
+        [downloadingProgresses addObject:@0];
         [downloadInputs addObject:task];
     }//end if
 }
@@ -49,6 +52,31 @@
     return NO;
 }
 
+- (void)handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL {
+    NSError *movingFileError;
+    NSError *removingFileError;
+    NSDictionary *downloadInfo = [self downloadInfoOfTaskUrl:downloadURL];
+    NSString *destinationPath = downloadInfo[@"destination"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath:destinationPath]) {
+        [fileManager removeItemAtPath:destinationPath error:&removingFileError];
+    }//end if
+    
+    [fileManager moveItemAtPath:downloadedFileLocation.path toPath:destinationPath error:&movingFileError];
+    
+    if(movingFileError) {
+        NSLog(@"Error: %@", movingFileError.localizedDescription);
+        // TODO: redownload file
+    } else {
+        // done
+    }//end else
+}
+
+- (void)updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage {
+    downloadingProgresses[[urls indexOfObject:url]] = [NSNumber numberWithFloat:percentage];
+    NSLog(@"Downloading Progress %@", downloadingProgresses[[urls indexOfObject:url]]);
+}
+
 - (void)createFolderForDestination:(NSString *)destination {
     NSString *containerFolderPath = [destination stringByDeletingLastPathComponent];
     if (![[NSFileManager defaultManager] fileExistsAtPath:containerFolderPath]){
@@ -58,39 +86,12 @@
     }
 }
 
-- (void) start {
-    for(NSDictionary *dictionary in downloadInputs) {
-        NSLog(@"destintaion %@ & url = %@", dictionary[@"destination"], dictionary[@"url"] );
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:dictionary[@"url"]];
-        //customize the request if needed... Example:
-        [request setTimeoutInterval:90.0];
+- (NSArray *)downloadObjects {
+    return downloadInputs;
+}
 
-        JGDownloadOperation *operation = [[JGDownloadOperation alloc] initWithRequest:request destinationPath:dictionary[@"destination"] allowResume:YES];
-        [operation setMaximumNumberOfConnections:6];
-        [operation setRetryCount:3];
-        
-        __block CFTimeInterval started;
-        
-        [operation setCompletionBlockWithSuccess:^(JGDownloadOperation *operation) {
-            double kbLength = (double)operation.contentLength/1024.0f;
-            CFTimeInterval delta = CFAbsoluteTimeGetCurrent()-started;
-            NSLog(@"Success! Downloading %.2f MB took %.1f seconds, average Speed: %.2f kb/s", kbLength/1024.0f, delta, kbLength/delta);
-        } failure:^(JGDownloadOperation *operation, NSError *error) {
-            NSLog(@"Operation Failed: %@", error.localizedDescription);
-        }];
-        
-        [operation setDownloadProgressBlock:^(NSUInteger bytesRead, unsigned long long totalBytesReadThisSession, unsigned long long totalBytesWritten, unsigned long long totalBytesExpectedToRead, NSUInteger tag) {
-            CFTimeInterval delta = CFAbsoluteTimeGetCurrent()-started;
-            NSLog(@"Progress: %.2f%% Average Speed: %.2f kB/s", ((double)totalBytesWritten/(double)totalBytesExpectedToRead)*100.0f, totalBytesReadThisSession/1024.0f/delta);
-        }];
-        
-        [operation setOperationStartedBlock:^(NSUInteger tag, unsigned long long totalBytesExpectedToRead) {
-            started = CFAbsoluteTimeGetCurrent();
-        }];
-        
-        [operationQueue addOperation:operation];
-    }
-    
+- (NSDictionary *)downloadInfoOfTaskUrl:(NSString *)url {
+    return downloadInputs[[urls indexOfObject:url]];
 }
 
 @end

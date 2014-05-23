@@ -27,6 +27,7 @@
 		1A034E7819251D79000685C9 /* JGResumeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7219251D79000685C9 /* JGResumeObject.m */; };
 		1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */; };
 		1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */; };
+		1A07081A192F8DB7004CE09F /* ObjectiveCDMDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A070819192F8DB7004CE09F /* ObjectiveCDMDownload.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDM.m; sourceTree = "<group>"; };
 		1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadBatch.h; sourceTree = "<group>"; };
 		1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownloadBatch.m; sourceTree = "<group>"; };
+		1A070818192F8DB7004CE09F /* ObjectiveCDMDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownload.h; sourceTree = "<group>"; };
+		1A070819192F8DB7004CE09F /* ObjectiveCDMDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownload.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +179,7 @@
 		1A034E6119250FCC000685C9 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1A070817192F8CAB004CE09F /* DownloadTask */,
 				1A034E7919251DC4000685C9 /* ObjectiveCDM.h */,
 				1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */,
 				1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */,
@@ -214,6 +218,15 @@
 			);
 			name = "JGDownloadAcceleration Classes";
 			path = "../JGDownloadAcceleration/JGDownloadAcceleration Classes";
+			sourceTree = "<group>";
+		};
+		1A070817192F8CAB004CE09F /* DownloadTask */ = {
+			isa = PBXGroup;
+			children = (
+				1A070818192F8DB7004CE09F /* ObjectiveCDMDownload.h */,
+				1A070819192F8DB7004CE09F /* ObjectiveCDMDownload.m */,
+			);
+			name = DownloadTask;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,6 +331,7 @@
 				1A034E7819251D79000685C9 /* JGResumeObject.m in Sources */,
 				1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */,
 				1A034E7419251D79000685C9 /* JGDownloadOperation.m in Sources */,
+				1A07081A192F8DB7004CE09F /* ObjectiveCDMDownload.m in Sources */,
 				1A034E7619251D79000685C9 /* JGHEADRequest.m in Sources */,
 				1A034E7319251D79000685C9 /* JGDownload.m in Sources */,
 			);

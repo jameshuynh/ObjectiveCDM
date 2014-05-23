@@ -7,16 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JGOperationQueue.h"
-#import "JGDownloadDefines.h"
 
 @interface ObjectiveCDMDownloadBatch : NSObject {
-    JGOperationQueue* operationQueue;
     NSMutableArray *downloadInputs;
+    NSMutableArray *urls;
+    NSMutableArray *downloadingProgresses;
     
 }
 
 - (void) addTaskWithURL:(NSURL *)url andDestination:(NSString *)destination;
 - (void) addTaskWithURLString:(NSString *)urlString andDestination:(NSString *)destination;
-- (void) start;
+- (void)handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
+- (NSArray *)downloadObjects;
+- (NSDictionary *)downloadInfoOfTaskUrl:(NSString *)url;
+- (void)updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage;
 @end
