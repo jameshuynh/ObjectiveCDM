@@ -29,25 +29,25 @@ pod "ObjectiveCDM", "~> 1.0.0"
   objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
 ```
 
-- If the final verification on downloaded file is failed, the file will be queued for downloaded again.
+- If the final verification on downloaded file is failed, the file will be queued to be downloaded again.
 
 ```objective-c
-  #import "ObjectiveCDM.h"
-  
-  [objectiveCDM downloadBatch:@[
-      @{
-          @"url": @"http://87.76.16.10/test10.zip",
-          @"destination": @"test/test10.zip",
-          @"fileSize": [NSNumber numberWithLongLong:11536384],
-          @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f"
-      },
-      @{
-          @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
-          @"destination": @"test/test100.zip",
-          @"fileSize": [NSNumber numberWithLongLong:104874307],
-          @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900"
-      }
-  ]];
+\#import "ObjectiveCDM.h"
+
+[objectiveCDM downloadBatch:@[
+    @{
+        @"url": @"http://87.76.16.10/test10.zip",
+        @"destination": @"test/test10.zip",
+        @"fileSize": [NSNumber numberWithLongLong:11536384],
+        @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f"
+    },
+    @{
+        @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
+        @"destination": @"test/test100.zip",
+        @"fileSize": [NSNumber numberWithLongLong:104874307],
+        @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900"
+    }
+]];
   
 ```
 
