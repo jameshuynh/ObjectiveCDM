@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "ObjectiveCDM"
-  s.version      = "0.0.1"
+  s.version      = "1.0.0"
   s.summary      = "Awesome Download Manager"
 
   s.description  = <<-DESC
@@ -73,7 +73,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "git@github.com:jameshuynh/ObjectiveCDM.git", :tag => "0.0.1" }
+  s.source       = { :git => "git@github.com:jameshuynh/ObjectiveCDM.git", :tag => "1.0.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

@@ -7,8 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ObjectiveCDM.h"
+#import "FileHash.h"
 
-@interface ObjectiveCDMDownloadTask : NSObject
+@interface ObjectiveCDMDownloadTask : NSObject {
+    FileHashAlgorithm fileHashAlgorithm;
+}
 
 @property(nonatomic, assign) BOOL completed;
 @property(nonatomic, assign) int64_t totalBytesWritten;
@@ -20,10 +24,20 @@
 @property(nonatomic, retain) NSString* fileName;
 @property(nonatomic, retain) NSString* checkSum;
 
-- (instancetype) initWithURLString:(NSString *)urlString withDestination:(NSString *)destination andChecksum:(NSString *)checksum;
+- (instancetype) initWithURLString:(NSString *)urlString
+                 withDestination:(NSString *)destination
+                 andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWrite
+                 andChecksum:(NSString *)checksum
+                 andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
 
-- (instancetype) initWithURL:(NSURL *)url withDestination:(NSString *)destination andChecksum:(NSString *)checksum;
+- (instancetype) initWithURL:(NSURL *)url
+                 withDestination:(NSString *)destination
+                 andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWrite
+                 andChecksum:(NSString *)checksum
+                 andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
 
+- (void) cleanUp;
 - (float) downloadingProgress;
+- (BOOL) verifyDownload;
 
 @end

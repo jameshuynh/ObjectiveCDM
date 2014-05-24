@@ -6,24 +6,39 @@
 //
 //
 
+
 #import <Foundation/Foundation.h>
+
+enum {
+    FileHashAlgorithmMD5 = 1,
+    FileHashAlgorithmSHA1 = 2,
+    FileHashAlgorithmSHA512 = 3
+};
+
+typedef NSInteger FileHashAlgorithm;
+
+@class ObjectiveCDMDownloadTask;
+
+#import "ObjectiveCDM.h"
 #import "ObjectiveCDMDownloadTask.h"
 
 @interface ObjectiveCDMDownloadBatch : NSObject {
     NSMutableArray *downloadInputs;
     NSMutableArray *urls;
+    NSURLSession *session;
+    FileHashAlgorithm fileHashAlgorithm;
 }
 
-@property(nonatomic, assign) BOOL isCompleted;
+@property(nonatomic, assign) BOOL completed;
 
+- (instancetype) initWithDownloadSession:(NSURLSession *)inputSession andFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithm;
 - (void) addTask:(NSDictionary *)taskInfo;
-
-- (void) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
+- (BOOL) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
 - (NSArray *)downloadObjects;
 - (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url;
 
 - (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten;
 - (void) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
 - (NSDictionary *) totalBytesWrittenAndReceived;
-- (void)startDownloadURL:(ObjectiveCDMDownloadTask *)downloadTaskInfo withURLSession:(NSURLSession *)session;
+- (void)startDownloadURL:(ObjectiveCDMDownloadTask *)downloadTaskInfo;
 @end

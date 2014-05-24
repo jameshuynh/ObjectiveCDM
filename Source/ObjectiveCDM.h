@@ -10,6 +10,7 @@
 #import "ObjectiveCDMDownloadBatch.h"
 #import "ObjectiveCDMDownloadTask.h"
 
+@class ObjectiveCDMDownloadBatch;
 @protocol ObjectiveCDMUIDelegate;
 @protocol ObjectiveCDMDataDelegate;
 
@@ -28,6 +29,7 @@
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
 - (void) cancelAllOutStandingTasks;
 
+@property(nonatomic, assign) FileHashAlgorithm fileHashAlgorithm;
 @property(nonatomic, retain) id<ObjectiveCDMUIDelegate> uiDelegate;
 @property(nonatomic, retain) id<ObjectiveCDMDataDelegate> dataDelegate;
 
@@ -35,7 +37,7 @@
 
 @protocol ObjectiveCDMUIDelegate
 - (void) didReachProgress:(float)progress;
-- (BOOL) didFinish;
+- (void) didFinish;
 @end
 
 @protocol ObjectiveCDMDataDelegate

@@ -17,6 +17,7 @@
         sharedManager = [[[self class] alloc] init];
         [sharedManager setInitialDownloadedBytes:0];
         [sharedManager setTotalBytes:0];
+        ((ObjectiveCDM *)sharedManager).fileHashAlgorithm = FileHashAlgorithmSHA1;
     });
     return sharedManager;
 }
@@ -52,13 +53,14 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:@"com.rubify.ObjectiveCDM"];
+        config.HTTPMaximumConnectionsPerHost = 4;
         backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     });
     return backgroundSession;
 }
 
 - (void) downloadBatch:(NSArray *)arrayOfDownloadInformation {
-    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] init];
+    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithDownloadSession:[self session] andFileHashAlgorithm:self.fileHashAlgorithm];
     for(NSDictionary *dictionary in arrayOfDownloadInformation) {
         [batch addTask:dictionary];
     }//end for
@@ -66,7 +68,7 @@
 }
 
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination {
-    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] init];
+    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithDownloadSession:[self session] andFileHashAlgorithm:self.fileHashAlgorithm];
     [batch addTask:@{@"url": urlString, @"destination":destination}];
     [self startADownloadBatch:batch];
 }
@@ -88,7 +90,7 @@
                 }
             }//end for
             if(isDownloading == NO) {
-                [batch startDownloadURL:downloadTaskInfo withURLSession:self.session];
+                [batch startDownloadURL:downloadTaskInfo];
             }//end if
         }//end for
         if(self.uiDelegate) {
@@ -100,26 +102,46 @@
 # pragma NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-    
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
-    [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:(totalBytesWritten * 1.0 / totalBytesExpectedToWrite) withTotalBytesWritten:totalBytesWritten];
+    float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
+    NSLog(@"Downloading Progress %f", progress);
+    [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten];
     if(self.uiDelegate) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-            [self.uiDelegate didReachProgress:[self overallProgress]];
-        }];
-        
+        [self postProgressToUIDelegate];
     }//end if
 }
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
+- (void) postProgressToUIDelegate {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        [self.uiDelegate didReachProgress:[self overallProgress]];
+    }];
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTaskInfo didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
-    [currentBatch handleDownloadedFileAt:location forDownloadURL:downloadURL];
-    if(self.dataDelegate) {
-        [self.dataDelegate didFinishDownloadObject:[currentBatch downloadInfoOfTaskUrl:downloadURL]];
+    ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch downloadInfoOfTaskUrl:downloadTask.originalRequest.URL.absoluteString];
+    if(downloadTaskInfo) {
+        BOOL finalResult = [currentBatch handleDownloadedFileAt:location forDownloadURL:downloadURL];
+        if(finalResult) {
+            if(self.dataDelegate) {
+                [self.dataDelegate didFinishDownloadObject:[currentBatch downloadInfoOfTaskUrl:downloadURL]];
+            }//end if
+            if(currentBatch.completed && self.uiDelegate) {
+                [self.uiDelegate didFinish];
+            }
+        } else {
+            // clean up and redownload file
+            [downloadTaskInfo cleanUp];
+            [currentBatch startDownloadURL:downloadTaskInfo];
+            [self postProgressToUIDelegate];
+        }
     }//end if
+    else {
+        // ignore -- not my task
+    }
 }
 
 @end

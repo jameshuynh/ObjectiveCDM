@@ -19,16 +19,15 @@
 		1A034E4E19250F4F000685C9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A034E3619250F4F000685C9 /* UIKit.framework */; };
 		1A034E5619250F4F000685C9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A034E5419250F4F000685C9 /* InfoPlist.strings */; };
 		1A034E5819250F4F000685C9 /* ObjectiveCDM_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E5719250F4F000685C9 /* ObjectiveCDM_ExampleTests.m */; };
-		1A034E7319251D79000685C9 /* JGDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E6519251D79000685C9 /* JGDownload.m */; };
-		1A034E7419251D79000685C9 /* JGDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E6919251D79000685C9 /* JGDownloadOperation.m */; };
-		1A034E7519251D79000685C9 /* JGDownloadResumeMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E6C19251D79000685C9 /* JGDownloadResumeMetadata.m */; };
-		1A034E7619251D79000685C9 /* JGHEADRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E6E19251D79000685C9 /* JGHEADRequest.m */; };
-		1A034E7719251D79000685C9 /* JGOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7019251D79000685C9 /* JGOperationQueue.m */; };
-		1A034E7819251D79000685C9 /* JGResumeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7219251D79000685C9 /* JGResumeObject.m */; };
 		1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */; };
 		1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */; };
 		1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3FDB971930371B00E3E95C /* DownloadViewController.m */; };
 		1A6AC9A21930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A11930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m */; };
+		1A6AC9A61930F932003ECFC7 /* FileHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A51930F932003ECFC7 /* FileHash.m */; };
+		1A6AC9A81930F93B003ECFC7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A71930F93B003ECFC7 /* README.md */; };
+		1A6AC9AA1930F947003ECFC7 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A91930F947003ECFC7 /* LICENSE */; };
+		1A6AC9AC1930F958003ECFC7 /* NOTICE in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9AB1930F958003ECFC7 /* NOTICE */; };
+		1A6AC9AF1930F967003ECFC7 /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9AE1930F967003ECFC7 /* CHANGELOG */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,21 +57,6 @@
 		1A034E5319250F4F000685C9 /* ObjectiveCDM-ExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjectiveCDM-ExampleTests-Info.plist"; sourceTree = "<group>"; };
 		1A034E5519250F4F000685C9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1A034E5719250F4F000685C9 /* ObjectiveCDM_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDM_ExampleTests.m; sourceTree = "<group>"; };
-		1A034E6419251D79000685C9 /* JGDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGDownload.h; sourceTree = "<group>"; };
-		1A034E6519251D79000685C9 /* JGDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGDownload.m; sourceTree = "<group>"; };
-		1A034E6619251D79000685C9 /* JGDownloadAcceleration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGDownloadAcceleration.h; sourceTree = "<group>"; };
-		1A034E6719251D79000685C9 /* JGDownloadDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGDownloadDefines.h; sourceTree = "<group>"; };
-		1A034E6819251D79000685C9 /* JGDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGDownloadOperation.h; sourceTree = "<group>"; };
-		1A034E6919251D79000685C9 /* JGDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGDownloadOperation.m; sourceTree = "<group>"; };
-		1A034E6A19251D79000685C9 /* JGDownloadOperationPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGDownloadOperationPrivate.h; sourceTree = "<group>"; };
-		1A034E6B19251D79000685C9 /* JGDownloadResumeMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGDownloadResumeMetadata.h; sourceTree = "<group>"; };
-		1A034E6C19251D79000685C9 /* JGDownloadResumeMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGDownloadResumeMetadata.m; sourceTree = "<group>"; };
-		1A034E6D19251D79000685C9 /* JGHEADRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGHEADRequest.h; sourceTree = "<group>"; };
-		1A034E6E19251D79000685C9 /* JGHEADRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGHEADRequest.m; sourceTree = "<group>"; };
-		1A034E6F19251D79000685C9 /* JGOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGOperationQueue.h; sourceTree = "<group>"; };
-		1A034E7019251D79000685C9 /* JGOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGOperationQueue.m; sourceTree = "<group>"; };
-		1A034E7119251D79000685C9 /* JGResumeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGResumeObject.h; sourceTree = "<group>"; };
-		1A034E7219251D79000685C9 /* JGResumeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGResumeObject.m; sourceTree = "<group>"; };
 		1A034E7919251DC4000685C9 /* ObjectiveCDM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDM.h; sourceTree = "<group>"; };
 		1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDM.m; sourceTree = "<group>"; };
 		1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadBatch.h; sourceTree = "<group>"; };
@@ -81,6 +65,12 @@
 		1A3FDB971930371B00E3E95C /* DownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
 		1A6AC9A01930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadTask.h; sourceTree = "<group>"; };
 		1A6AC9A11930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownloadTask.m; sourceTree = "<group>"; };
+		1A6AC9A41930F932003ECFC7 /* FileHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHash.h; sourceTree = "<group>"; };
+		1A6AC9A51930F932003ECFC7 /* FileHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileHash.m; sourceTree = "<group>"; };
+		1A6AC9A71930F93B003ECFC7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		1A6AC9A91930F947003ECFC7 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		1A6AC9AB1930F958003ECFC7 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTICE; sourceTree = "<group>"; };
+		1A6AC9AE1930F967003ECFC7 /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +100,6 @@
 		1A034E2619250F4F000685C9 = {
 			isa = PBXGroup;
 			children = (
-				1A034E6219251D70000685C9 /* Libraries */,
 				1A034E6119250FCC000685C9 /* Source */,
 				1A034E3819250F4F000685C9 /* ObjectiveCDM-Example */,
 				1A034E5119250F4F000685C9 /* ObjectiveCDM-ExampleTests */,
@@ -184,6 +173,7 @@
 		1A034E6119250FCC000685C9 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1A6AC9A31930F929003ECFC7 /* FileHash */,
 				1A034E7919251DC4000685C9 /* ObjectiveCDM.h */,
 				1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */,
 				1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */,
@@ -195,35 +185,25 @@
 			path = ../Source;
 			sourceTree = "<group>";
 		};
-		1A034E6219251D70000685C9 /* Libraries */ = {
+		1A6AC9A31930F929003ECFC7 /* FileHash */ = {
 			isa = PBXGroup;
 			children = (
-				1A034E6319251D79000685C9 /* JGDownloadAcceleration Classes */,
+				1A6AC9AD1930F95A003ECFC7 /* Library */,
+				1A6AC9AE1930F967003ECFC7 /* CHANGELOG */,
+				1A6AC9AB1930F958003ECFC7 /* NOTICE */,
+				1A6AC9A91930F947003ECFC7 /* LICENSE */,
+				1A6AC9A71930F93B003ECFC7 /* README.md */,
 			);
-			name = Libraries;
+			name = FileHash;
 			sourceTree = "<group>";
 		};
-		1A034E6319251D79000685C9 /* JGDownloadAcceleration Classes */ = {
+		1A6AC9AD1930F95A003ECFC7 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				1A034E6419251D79000685C9 /* JGDownload.h */,
-				1A034E6519251D79000685C9 /* JGDownload.m */,
-				1A034E6619251D79000685C9 /* JGDownloadAcceleration.h */,
-				1A034E6719251D79000685C9 /* JGDownloadDefines.h */,
-				1A034E6819251D79000685C9 /* JGDownloadOperation.h */,
-				1A034E6919251D79000685C9 /* JGDownloadOperation.m */,
-				1A034E6A19251D79000685C9 /* JGDownloadOperationPrivate.h */,
-				1A034E6B19251D79000685C9 /* JGDownloadResumeMetadata.h */,
-				1A034E6C19251D79000685C9 /* JGDownloadResumeMetadata.m */,
-				1A034E6D19251D79000685C9 /* JGHEADRequest.h */,
-				1A034E6E19251D79000685C9 /* JGHEADRequest.m */,
-				1A034E6F19251D79000685C9 /* JGOperationQueue.h */,
-				1A034E7019251D79000685C9 /* JGOperationQueue.m */,
-				1A034E7119251D79000685C9 /* JGResumeObject.h */,
-				1A034E7219251D79000685C9 /* JGResumeObject.m */,
+				1A6AC9A41930F932003ECFC7 /* FileHash.h */,
+				1A6AC9A51930F932003ECFC7 /* FileHash.m */,
 			);
-			name = "JGDownloadAcceleration Classes";
-			path = "../JGDownloadAcceleration/JGDownloadAcceleration Classes";
+			name = Library;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,8 +287,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A6AC9AC1930F958003ECFC7 /* NOTICE in Resources */,
+				1A6AC9A81930F93B003ECFC7 /* README.md in Resources */,
 				1A034E3D19250F4F000685C9 /* InfoPlist.strings in Resources */,
+				1A6AC9AA1930F947003ECFC7 /* LICENSE in Resources */,
 				1A034E4519250F4F000685C9 /* Images.xcassets in Resources */,
+				1A6AC9AF1930F967003ECFC7 /* CHANGELOG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,16 +311,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A034E7719251D79000685C9 /* JGOperationQueue.m in Sources */,
+				1A6AC9A61930F932003ECFC7 /* FileHash.m in Sources */,
 				1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */,
 				1A034E4319250F4F000685C9 /* AppDelegate.m in Sources */,
-				1A034E7519251D79000685C9 /* JGDownloadResumeMetadata.m in Sources */,
 				1A034E3F19250F4F000685C9 /* main.m in Sources */,
-				1A034E7819251D79000685C9 /* JGResumeObject.m in Sources */,
 				1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */,
-				1A034E7419251D79000685C9 /* JGDownloadOperation.m in Sources */,
-				1A034E7619251D79000685C9 /* JGHEADRequest.m in Sources */,
-				1A034E7319251D79000685C9 /* JGDownload.m in Sources */,
 				1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */,
 				1A6AC9A21930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m in Sources */,
 			);
