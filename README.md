@@ -32,7 +32,7 @@ pod "ObjectiveCDM", "~> 1.0.0"
 - If the final verification on downloaded file is failed, the file will be queued to be downloaded again.
 
 ```objective-c
-\#import "ObjectiveCDM.h"
+#import "ObjectiveCDM.h"
 
 [objectiveCDM downloadBatch:@[
     @{
