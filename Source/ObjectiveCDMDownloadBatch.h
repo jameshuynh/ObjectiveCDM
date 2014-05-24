@@ -11,16 +11,16 @@
 @interface ObjectiveCDMDownloadBatch : NSObject {
     NSMutableArray *downloadInputs;
     NSMutableArray *urls;
-    NSMutableArray *downloadingProgresses;
-    
 }
+
+@property(nonatomic, assign) BOOL isCompleted;
 
 - (void) addTaskWithURL:(NSURL *)url andDestination:(NSString *)destination;
 - (void) addTaskWithURLString:(NSString *)urlString andDestination:(NSString *)destination;
 - (void) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
 - (NSArray *)downloadObjects;
 - (NSMutableDictionary *)downloadInfoOfTaskUrl:(NSString *)url;
-- (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage;
+- (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten;
 - (void) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
 - (NSDictionary *) totalBytesWrittenAndReceived;
 - (void)startDownloadURL:(NSMutableDictionary *) downloadInput withURLSession:(NSURLSession *)session ;

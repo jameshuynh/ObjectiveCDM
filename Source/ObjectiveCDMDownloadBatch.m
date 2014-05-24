@@ -15,7 +15,6 @@
     if(self) {
         downloadInputs = [[NSMutableArray alloc] initWithArray:@[]];
         urls = [[NSMutableArray alloc] initWithArray:@[]];
-        downloadingProgresses = [[NSMutableArray alloc] initWithArray:@[]];
     }//end if
     return self;
 }
@@ -25,7 +24,6 @@
         [self createFolderForDestination:destination];
         NSMutableDictionary *task = [[NSMutableDictionary alloc] initWithDictionary:@{@"totalBytesDownloaded": @0, @"totalBytesToBeReceived": @0, @"url": url, @"destination": destination}];
         [urls addObject:[url absoluteString]];
-        [downloadingProgresses addObject:@0];
         [downloadInputs addObject:task];
     }//end if
 }
@@ -36,7 +34,6 @@
         [self createFolderForDestination:destination];
         NSMutableDictionary *task = [[NSMutableDictionary alloc] initWithDictionary:@{@"totalBytesDownloaded": @0, @"totalBytesToBeReceived": @0, @"url": url, @"destination": destination}];
         [urls addObject:urlString];
-        [downloadingProgresses addObject:@0];
         [downloadInputs addObject:task];
     }//end if
 }
@@ -79,12 +76,11 @@
     NSNumber *bytesToBeReceived = downloadInfo[@"totalBytesToBeReceived"];
     if([bytesToBeReceived longLongValue] == 0) {
         downloadInfo[@"totalBytesToBeReceived"] = [NSNumber numberWithLongLong:downloadTask.countOfBytesExpectedToReceive];
-        NSLog(@"bytes to received %@", downloadInfo[@"totalBytesToBeReceived"]);
     }//end if
 }
 
-- (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage {
-    downloadingProgresses[[urls indexOfObject:url]] = [NSNumber numberWithFloat:percentage];
+- (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten {
+    [[self downloadInfoOfTaskUrl:url] setObject:[NSNumber numberWithLongLong:totalBytesWritten] forKey:@"totalBytesDownloaded"];
 }
 
 - (void) createFolderForDestination:(NSString *)destination {
@@ -108,7 +104,6 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:downloadInput[@"url"]];
     if([downloadInput[@"totalBytesToBeReceived"] longLongValue] == 0) {
         [self requestForTotalBytesForURL:downloadInput[@"url"] withCallback:^(int64_t totalBytesToBeReceived)  {
-            NSLog(@"hello world");
             downloadInput[@"totalBytesToBeReceived"] = [NSNumber numberWithLongLong:totalBytesToBeReceived];
             [self downloadRequest:request inURLSession:session];
         }];
@@ -124,16 +119,14 @@
 }
 
 - (void) requestForTotalBytesForURL:(NSURL *)url withCallback:(void (^)(int64_t))completed {
-    NSLog(@"url %@", url);
     NSMutableURLRequest *headRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     [headRequest setValue:@"" forHTTPHeaderField:@"Accept-Encoding"];
     [headRequest setHTTPMethod:@"HEAD"];
     NSURLSession *session = [NSURLSession sharedSession];
-    NSLog(@"jaksdlakjsdlkajsd");
-    [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSLog(@"expected content length %lld", response.expectedContentLength);
+    NSURLSessionDataTask *headTask = [session dataTaskWithRequest:headRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         completed(response.expectedContentLength);
     }];
+    [headTask resume];
 }
 
 - (NSDictionary *) totalBytesWrittenAndReceived {

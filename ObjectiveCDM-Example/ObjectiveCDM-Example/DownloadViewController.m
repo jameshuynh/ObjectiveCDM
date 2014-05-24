@@ -50,7 +50,7 @@
     // [objectiveCDM downloadBatch:@[@{@"url": @"http://casie.projectwebby.com/system/intro_videos/uploaded_videos/000/000/006/original/starhub-low-latency-customer-facing-video-v7-cut-down-2.mp4", @"destination": @"test/video.mp4"}]];
     // [objectiveCDM downloadBatch:@[@{@"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip", @"destination": @"test/test.zip"}, @{@"url": @"http://87.76.16.10/test10.zip", @"destination": @"test/test2.zip"}, @{@"url": @"http://mia.futurehosting.com/test.zip", @"destination": @"test/test3.zip"}]];
     
-    [objectiveCDM downloadBatch:@[@{@"url": @"http://87.76.16.10/test10.zip", @"destination": @"test/test10.zip"}]];
+    [objectiveCDM downloadBatch:@[@{@"url": @"http://87.76.16.10/test10.zip", @"destination": @"test/test10.zip"}, @{@"url": @"http://casie.projectwebby.com/system/intro_videos/uploaded_videos/000/000/006/original/starhub-low-latency-customer-facing-video-v7-cut-down-2.mp4", @"destination": @"test/video-v7-cut-down-2.mp4"}]];
     objectiveCDM.uiDelegate = self;
     
     // Do any additional setup after loading the view.
@@ -64,7 +64,8 @@
 - (void) didReachProgress:(float)progress {
     UILabel *label = (UILabel *)[self.view viewWithTag:1001];
     float percentage = progress * 100.0;
-    [label setText:[NSString stringWithFormat:@"%.2f%%", percentage]];
+    NSString* formattedPercentage = [NSString stringWithFormat:@"%.02f%%", percentage];
+    [label setText:formattedPercentage];
 }
 
 - (BOOL) didFinish {

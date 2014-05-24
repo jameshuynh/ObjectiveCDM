@@ -25,6 +25,7 @@
 - (void) downloadBatch:(NSArray *)arrayOfDownloadInformation;
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination;
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
+- (void) cancelAllOutStandingTasks;
 
 @property(nonatomic, retain) id<ObjectiveCDMUIDelegate> uiDelegate;
 @property(nonatomic, retain) id<ObjectiveCDMDataDelegate> dataDelegate;

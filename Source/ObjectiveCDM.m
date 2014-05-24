@@ -39,12 +39,12 @@
         actualTotalBytes = totalBytes;
     }//end else
     
-    int64_t actualDownloadedBytes = [(NSNumber *)bytesInfo[@"totalBytesDownloaded"] longLongValue] + initialDownloadedBytes;
+    int64_t actualDownloadedBytes = [(NSNumber *)bytesInfo[@"totalDownloadedBytes"] longLongValue] + initialDownloadedBytes;
     
     if(actualTotalBytes == 0) {
         return 0;
     }//end if
-    
+    NSLog(@"total progress %f", (double)actualDownloadedBytes / (double)actualTotalBytes);
     return (double)actualDownloadedBytes / (double)actualTotalBytes;
 }
 
@@ -78,11 +78,16 @@
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-    NSLog(@"Downloading Progress %f - %@", totalBytesWritten * 1.0 / totalBytesExpectedToWrite, session.configuration.identifier);
+    
+    // NSLog(@"Downloading Progress %f - %@", totalBytesWritten * 1.0 / totalBytesExpectedToWrite, session.configuration.identifier);
+    
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
-    [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:(totalBytesWritten * 1.0 / totalBytesExpectedToWrite)];
+    [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:(totalBytesWritten * 1.0 / totalBytesExpectedToWrite) withTotalBytesWritten:totalBytesWritten];
     if(self.uiDelegate) {
-        [self.uiDelegate didReachProgress:[self overallProgress]];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+            [self.uiDelegate didReachProgress:[self overallProgress]];
+        }];
+        
     }//end if
 }
 
@@ -97,12 +102,17 @@
     }//end if
 }
 
+- (void) cancelAllOutStandingTasks {
+    [self.session invalidateAndCancel];
+}
+
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch {
     currentBatch = batch;
     [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
         for(NSMutableDictionary *dictionary in batch.downloadObjects) {
             BOOL isDownloading = NO;
             NSURL *url = dictionary[@"url"];
+            NSLog(@"url %@", url);
             for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
                 if([[url absoluteString] isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
                     [batch captureDownloadingInfoOfDownloadTask:downloadTask];
