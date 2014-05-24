@@ -33,7 +33,7 @@
     [progressLabel setFont:[UIFont boldSystemFontOfSize:20]];
     progressLabel.tag = 1001;
     [self.view addSubview:progressLabel];
-    ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
+    ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];    
     
     [objectiveCDM downloadBatch:@[
         @{

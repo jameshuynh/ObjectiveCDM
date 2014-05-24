@@ -22,7 +22,13 @@ pod "ObjectiveCDM", "~> 1.0.0"
 
 - Only URL and Destination are compulsory in each of the dowloading information.
 - If `fileSize` is not supplied, the download manager will trigger a `HEAD` request to query for content length to fill in `fileSize`.
-- If checksum is supplied, the download manager will verify againsts the downloaded file's checksum. If no checksum is supplied, the verification will be only based on the `fileSize`.
+- If checksum is supplied, the download manager will verify againsts the downloaded file's checksum. If no checksum is supplied, the verification will be only based on the `fileSize`. Default file hashing algorithm is SHA1. You can change by using
+
+```objective-c
+  ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
+  objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
+```
+
 - If the final verification on downloaded file is failed, the file will be queued for downloaded again.
 
 ```objective-c
