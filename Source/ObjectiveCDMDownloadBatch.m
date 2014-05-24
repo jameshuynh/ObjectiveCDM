@@ -19,45 +19,41 @@
     return self;
 }
 
-- (void) addTaskWithURL:(NSURL *)url andDestination:(NSString *)destination {
-    if([self isTaskExistWithURL:url andDestination:destination] == NO) {
-        [self createFolderForDestination:destination];
-        NSMutableDictionary *task = [[NSMutableDictionary alloc] initWithDictionary:@{@"totalBytesDownloaded": @0, @"totalBytesToBeReceived": @0, @"url": url, @"destination": destination}];
-        [urls addObject:[url absoluteString]];
-        [downloadInputs addObject:task];
+- (void) addTask:(NSDictionary *)taskInfo {
+    NSString *urlString = nil;
+    BOOL isURLString = YES;
+    if([taskInfo[@"url"] isKindOfClass:[NSURL class]]) {
+        urlString = [((NSURL *)taskInfo[@"url"]) absoluteString];
+        isURLString = NO;
     }//end if
-}
-
-- (void) addTaskWithURLString:(NSString *)urlString andDestination:(NSString *)destination {
-    NSURL *url = [NSURL URLWithString:urlString];
-    if([self isTaskExistWithURL:url andDestination:destination] == NO) {
-        [self createFolderForDestination:destination];
-        NSMutableDictionary *task = [[NSMutableDictionary alloc] initWithDictionary:@{@"totalBytesDownloaded": @0, @"totalBytesToBeReceived": @0, @"url": url, @"destination": destination}];
+    else {
+        urlString = taskInfo[@"url"];
+    }//end else
+    
+    NSString *destination = taskInfo[@"destination"];
+    if([self isTaskExistWithURL:urlString andDestination:destination] == NO) {
+        ObjectiveCDMDownloadTask *downloadTask = nil;
+        if(isURLString) {
+            downloadTask = [[ObjectiveCDMDownloadTask alloc] initWithURLString:urlString withDestination:destination andChecksum:taskInfo[@"checksum"]];
+        } else {
+            downloadTask = [[ObjectiveCDMDownloadTask alloc] initWithURL:taskInfo[@"url"] withDestination:destination andChecksum:taskInfo[@"checksum"]];
+        }//end else
+        
         [urls addObject:urlString];
-        [downloadInputs addObject:task];
+        [downloadInputs addObject:downloadTask];
     }//end if
 }
 
-- (BOOL) isTaskExistWithURL:(NSURL *)url andDestination:(NSString *)destination {
-    for(NSDictionary *dictionary in downloadInputs) {
-        if([[dictionary[@"url"] absoluteString] isEqualToString:[url absoluteString]] ||
-           [dictionary[@"destination"] isEqualToString:destination]) {
-            return YES;
-        }
-    }
-    return NO;
+- (BOOL) isTaskExistWithURL:(NSString *)urlString andDestination:(NSString *)destination {
+    return [urls indexOfObject:urlString] != NSNotFound;
 }
 
 - (void) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL {
     NSError *movingFileError;
-    NSError *removingFileError;
-    NSDictionary *downloadInfo = [self downloadInfoOfTaskUrl:downloadURL];
-    NSString *destinationPath = downloadInfo[@"destination"];
+    ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:downloadURL];
+    NSString *destinationPath = downloadTaskInfo.destination;
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if([fileManager fileExistsAtPath:destinationPath]) {
-        [fileManager removeItemAtPath:destinationPath error:&removingFileError];
-    }//end if
-    
+
     [fileManager moveItemAtPath:downloadedFileLocation.path toPath:destinationPath error:&movingFileError];
     
     if(movingFileError) {
@@ -71,40 +67,31 @@
 - (void) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask {
     // task is already inside the session - do nothing
     NSURL *url = downloadTask.originalRequest.URL;
-    NSMutableDictionary *downloadInfo = [self downloadInfoOfTaskUrl:url.absoluteString];
-    downloadInfo[@"totalBytesDownloaded"] = [NSNumber numberWithLongLong:downloadTask.countOfBytesReceived];
-    NSNumber *bytesToBeReceived = downloadInfo[@"totalBytesToBeReceived"];
-    if([bytesToBeReceived longLongValue] == 0) {
-        downloadInfo[@"totalBytesToBeReceived"] = [NSNumber numberWithLongLong:downloadTask.countOfBytesExpectedToReceive];
+    ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:url.absoluteString];
+    downloadTaskInfo.totalBytesWritten = downloadTask.countOfBytesReceived;
+
+    if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
+        downloadTaskInfo.totalBytesExpectedToWrite = downloadTask.countOfBytesExpectedToReceive;
     }//end if
 }
 
 - (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten {
-    [[self downloadInfoOfTaskUrl:url] setObject:[NSNumber numberWithLongLong:totalBytesWritten] forKey:@"totalBytesDownloaded"];
-}
-
-- (void) createFolderForDestination:(NSString *)destination {
-    NSString *containerFolderPath = [destination stringByDeletingLastPathComponent];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:containerFolderPath]){
-        NSError* error;
-        if([[NSFileManager defaultManager] createDirectoryAtPath:containerFolderPath withIntermediateDirectories:YES attributes:nil error:&error]) {
-        }//end if
-    }
+    [self downloadInfoOfTaskUrl:url].totalBytesWritten = totalBytesWritten;
 }
 
 - (NSArray *)downloadObjects {
     return downloadInputs;
 }
 
-- (NSMutableDictionary *)downloadInfoOfTaskUrl:(NSString *)url {
+- (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url {
     return downloadInputs[[urls indexOfObject:url]];
 }
 
-- (void)startDownloadURL:(NSMutableDictionary *) downloadInput withURLSession:(NSURLSession *)session {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:downloadInput[@"url"]];
-    if([downloadInput[@"totalBytesToBeReceived"] longLongValue] == 0) {
-        [self requestForTotalBytesForURL:downloadInput[@"url"] withCallback:^(int64_t totalBytesToBeReceived)  {
-            downloadInput[@"totalBytesToBeReceived"] = [NSNumber numberWithLongLong:totalBytesToBeReceived];
+- (void)startDownloadURL:(ObjectiveCDMDownloadTask *)downloadTaskInfo withURLSession:(NSURLSession *)session {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:downloadTaskInfo.url];
+    if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
+        [self requestForTotalBytesForURL:downloadTaskInfo.url withCallback:^(int64_t totalBytesToBeReceived)  {
+            downloadTaskInfo.totalBytesExpectedToWrite = totalBytesToBeReceived;
             [self downloadRequest:request inURLSession:session];
         }];
     } else {
@@ -132,12 +119,10 @@
 - (NSDictionary *) totalBytesWrittenAndReceived {
     int64_t totalDownloadedBytes = 0;
     int64_t totalBytesExpectedToReceive = 0;
-    for(NSDictionary *downloadObject in downloadInputs) {
-        NSNumber *downloadedBytes = downloadObject[@"totalBytesDownloaded"];
-        NSNumber *expectedBytes = downloadObject[@"totalBytesToBeReceived"];
-        totalDownloadedBytes += [downloadedBytes longLongValue];
-        totalBytesExpectedToReceive += [expectedBytes longLongValue];
-    }
+    for(ObjectiveCDMDownloadTask *downloadTaskInfo in downloadInputs) {
+        totalDownloadedBytes += downloadTaskInfo.totalBytesWritten;
+        totalBytesExpectedToReceive += downloadTaskInfo.totalBytesExpectedToWrite;
+    }//end for
     
     return @{
         @"totalDownloadedBytes": [NSNumber numberWithLongLong:totalDownloadedBytes],

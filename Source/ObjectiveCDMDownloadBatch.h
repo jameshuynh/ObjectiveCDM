@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ObjectiveCDMDownloadTask.h"
 
 @interface ObjectiveCDMDownloadBatch : NSObject {
     NSMutableArray *downloadInputs;
@@ -15,13 +16,14 @@
 
 @property(nonatomic, assign) BOOL isCompleted;
 
-- (void) addTaskWithURL:(NSURL *)url andDestination:(NSString *)destination;
-- (void) addTaskWithURLString:(NSString *)urlString andDestination:(NSString *)destination;
+- (void) addTask:(NSDictionary *)taskInfo;
+
 - (void) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
 - (NSArray *)downloadObjects;
-- (NSMutableDictionary *)downloadInfoOfTaskUrl:(NSString *)url;
+- (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url;
+
 - (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten;
 - (void) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
 - (NSDictionary *) totalBytesWrittenAndReceived;
-- (void)startDownloadURL:(NSMutableDictionary *) downloadInput withURLSession:(NSURLSession *)session ;
+- (void)startDownloadURL:(ObjectiveCDMDownloadTask *)downloadTaskInfo withURLSession:(NSURLSession *)session;
 @end

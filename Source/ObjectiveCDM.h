@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ObjectiveCDMDownloadBatch.h"
+#import "ObjectiveCDMDownloadTask.h"
 
 @protocol ObjectiveCDMUIDelegate;
 @protocol ObjectiveCDMDataDelegate;
@@ -38,5 +39,5 @@
 @end
 
 @protocol ObjectiveCDMDataDelegate
-- (void) didFinishDownloadObject:(NSDictionary *)downloadInfo;
+- (void) didFinishDownloadObject:(ObjectiveCDMDownloadTask *)downloadInfo;
 @end

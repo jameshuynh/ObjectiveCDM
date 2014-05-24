@@ -28,6 +28,7 @@
 		1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */; };
 		1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */; };
 		1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3FDB971930371B00E3E95C /* DownloadViewController.m */; };
+		1A6AC9A21930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A11930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownloadBatch.m; sourceTree = "<group>"; };
 		1A3FDB961930371B00E3E95C /* DownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
 		1A3FDB971930371B00E3E95C /* DownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		1A6AC9A01930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadTask.h; sourceTree = "<group>"; };
+		1A6AC9A11930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownloadTask.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +188,8 @@
 				1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */,
 				1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */,
 				1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */,
+				1A6AC9A01930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.h */,
+				1A6AC9A11930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m */,
 			);
 			name = Source;
 			path = ../Source;
@@ -333,6 +338,7 @@
 				1A034E7619251D79000685C9 /* JGHEADRequest.m in Sources */,
 				1A034E7319251D79000685C9 /* JGDownload.m in Sources */,
 				1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */,
+				1A6AC9A21930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
