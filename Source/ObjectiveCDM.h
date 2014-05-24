@@ -10,20 +10,24 @@
 #import "ObjectiveCDMDownloadBatch.h"
 
 @protocol ObjectiveCDMUIDelegate;
-@protocol ObjectiveCDMUIDataDelegate;
+@protocol ObjectiveCDMDataDelegate;
 
 @interface ObjectiveCDM : NSObject <NSURLSessionDownloadDelegate> {
     NSURLSession *downloadSession;
     ObjectiveCDMDownloadBatch* currentBatch;
+    int64_t initialDownloadedBytes;
+    int64_t totalBytes;
 }
 
 + (instancetype) sharedInstance;
+- (void) setInitialDownloadedBytes:(int64_t)initialDownloadedBytes;
+- (void) setTotalBytes:(int64_t)totalBytes;
 - (void) downloadBatch:(NSArray *)arrayOfDownloadInformation;
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination;
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
 
 @property(nonatomic, retain) id<ObjectiveCDMUIDelegate> uiDelegate;
-@property(nonatomic, retain) id<ObjectiveCDMUIDataDelegate> dataDelegate;
+@property(nonatomic, retain) id<ObjectiveCDMDataDelegate> dataDelegate;
 
 @end
 
@@ -32,6 +36,6 @@
 - (BOOL) didFinish;
 @end
 
-@protocol ObjectiveCDMUIDataDelegate
+@protocol ObjectiveCDMDataDelegate
 - (void) didFinishDownloadObject:(NSDictionary *)downloadInfo;
 @end

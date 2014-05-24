@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "DownloadViewController.h"
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -16,27 +16,8 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
-//    [objectiveCDM downloadBatch:@[
-//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/228/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8398&contentId=228", @"destination":@"test/test.zip"},
-//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/230/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8399&contentId=230", @"destination": @"test/test1.zip"},
-//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/233/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8400&contentId=233", @"destination": @"test/test2.zip"},
-//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/234/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8401&contentId=234", @"destination": @"test/test3.zip"},
-//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/235/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8403&contentId=236", @"destination": @"test/test4.zip"},
-//        @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/200/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8403&contentId=200", @"destination": @"test/test5.zip"}
-//    ]];
-    
-//    [objectiveCDM downloadBatch:@[
-//      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/228/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8398&contentId=228", @"destination":@"test/test1.zip"},
-//      @{@"url": @"http://fedexlivenlearn.projectwebby.com/storage/activity_module_content_zips/241/download?auth_token=9CYZFmppU33JYm138ZLG&activityId=8343&contentId=241", @"destination":@"test/test2.zip"}]];
-
-    // [objectiveCDM downloadBatch:@[@{@"url": @"http://casie.projectwebby.com/system/intro_videos/uploaded_videos/000/000/006/original/starhub-low-latency-customer-facing-video-v7-cut-down-2.mp4", @"destination": @"test/video.mp4"}]];
-    // [objectiveCDM downloadBatch:@[@{@"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip", @"destination": @"test/test.zip"}, @{@"url": @"http://87.76.16.10/test10.zip", @"destination": @"test/test2.zip"}, @{@"url": @"http://mia.futurehosting.com/test.zip", @"destination": @"test/test3.zip"}]];
-    
-    NSLog(@"result of equal ==> %d", [@"https://dl.dropboxusercontent.com/u/2857188/BGTransferDemo.zip" isEqualToString:@"https://dl.dropboxusercontent.com/u/2857188/BGTransferDemo.zip"]);
-    [objectiveCDM downloadBatch:@[@{@"url": @"http://87.76.16.10/test10.zip", @"destination": @"test/test10.zip"}]];
-    
-    
+    DownloadViewController *mainViewController = [[DownloadViewController alloc] init];
+    self.window.rootViewController = mainViewController;
     return YES;
 }
 

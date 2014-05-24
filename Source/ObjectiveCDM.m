@@ -15,17 +15,47 @@
     static id sharedManager = nil;
     dispatch_once(&onceToken, ^{
         sharedManager = [[[self class] alloc] init];
+        [sharedManager setInitialDownloadedBytes:0];
+        [sharedManager setTotalBytes:0];
     });
     return sharedManager;
 }
 
-- (instancetype) init {
-    self = [super init];
-    if (self) {
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:@"com.objectiveCDM"];
-        downloadSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
-    }
-    return self;
+- (void) setInitialDownloadedBytes:(int64_t)initialDownloadedBytesInput {
+    initialDownloadedBytes = initialDownloadedBytesInput;
+}
+
+- (void) setTotalBytes:(int64_t)totalBytesInput {
+    totalBytes = totalBytesInput;
+}
+
+- (float) overallProgress {
+    int64_t actualTotalBytes = 0;
+    NSDictionary *bytesInfo = [currentBatch totalBytesWrittenAndReceived];
+
+    if(totalBytes == 0) {
+        actualTotalBytes = [(NSNumber *)bytesInfo[@"totalToBeReceivedBytes"] longLongValue];
+    } else {
+        actualTotalBytes = totalBytes;
+    }//end else
+    
+    int64_t actualDownloadedBytes = [(NSNumber *)bytesInfo[@"totalBytesDownloaded"] longLongValue] + initialDownloadedBytes;
+    
+    if(actualTotalBytes == 0) {
+        return 0;
+    }//end if
+    
+    return (double)actualDownloadedBytes / (double)actualTotalBytes;
+}
+
+- (NSURLSession *)session {
+    static NSURLSession *backgroundSession = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:@"com.rubify.ObjectiveCDM"];
+        backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+    });
+    return backgroundSession;
 }
 
 - (void) downloadBatch:(NSArray *)arrayOfDownloadInformation {
@@ -48,8 +78,12 @@
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    NSLog(@"Downloading Progress %f - %@", totalBytesWritten * 1.0 / totalBytesExpectedToWrite, session.configuration.identifier);
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
     [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:(totalBytesWritten * 1.0 / totalBytesExpectedToWrite)];
+    if(self.uiDelegate) {
+        [self.uiDelegate didReachProgress:[self overallProgress]];
+    }//end if
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
@@ -65,14 +99,24 @@
 
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch {
     currentBatch = batch;
-    for(NSDictionary *dictionary in batch.downloadObjects) {
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:dictionary[@"url"]];
-        //customize the request if needed... Example:
-        [request setTimeoutInterval:90.0];
-        NSURLSessionDownloadTask *downloadTask = [downloadSession downloadTaskWithRequest:request];
-        [downloadTask resume];
-    }
-
+    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        for(NSMutableDictionary *dictionary in batch.downloadObjects) {
+            BOOL isDownloading = NO;
+            NSURL *url = dictionary[@"url"];
+            for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+                if([[url absoluteString] isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
+                    [batch captureDownloadingInfoOfDownloadTask:downloadTask];
+                    isDownloading = YES;
+                }
+            }//end for
+            if(isDownloading == NO) {
+                [batch startDownloadURL:dictionary withURLSession:self.session];
+            }//end if
+        }//end for
+        if(self.uiDelegate) {
+            [self.uiDelegate didReachProgress:[self overallProgress]];
+        }//end if
+    }];
 }
 
 @end
