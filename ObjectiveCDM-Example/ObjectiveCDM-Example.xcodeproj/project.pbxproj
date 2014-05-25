@@ -30,6 +30,7 @@
 		1A6AC9AA1930F947003ECFC7 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A91930F947003ECFC7 /* LICENSE */; };
 		1A6AC9AC1930F958003ECFC7 /* NOTICE in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9AB1930F958003ECFC7 /* NOTICE */; };
 		1A6AC9AF1930F967003ECFC7 /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = 1A6AC9AE1930F967003ECFC7 /* CHANGELOG */; };
+		1AD73B1219320D6200E28950 /* DownloadTaskProgressTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD73B1119320D6200E28950 /* DownloadTaskProgressTableCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,8 @@
 		1A6AC9A91930F947003ECFC7 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		1A6AC9AB1930F958003ECFC7 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTICE; sourceTree = "<group>"; };
 		1A6AC9AE1930F967003ECFC7 /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
+		1AD73B1019320D6200E28950 /* DownloadTaskProgressTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadTaskProgressTableCell.h; sourceTree = "<group>"; };
+		1AD73B1119320D6200E28950 /* DownloadTaskProgressTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadTaskProgressTableCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +143,8 @@
 		1A034E3819250F4F000685C9 /* ObjectiveCDM-Example */ = {
 			isa = PBXGroup;
 			children = (
+				1AD73B1019320D6200E28950 /* DownloadTaskProgressTableCell.h */,
+				1AD73B1119320D6200E28950 /* DownloadTaskProgressTableCell.m */,
 				1A034E4119250F4F000685C9 /* AppDelegate.h */,
 				1A034E4219250F4F000685C9 /* AppDelegate.m */,
 				1A3FDB961930371B00E3E95C /* DownloadViewController.h */,
@@ -343,6 +348,7 @@
 				1A3BE3F41931AA2B00852040 /* Reachability.m in Sources */,
 				1A034E4319250F4F000685C9 /* AppDelegate.m in Sources */,
 				1A034E3F19250F4F000685C9 /* main.m in Sources */,
+				1AD73B1219320D6200E28950 /* DownloadTaskProgressTableCell.m in Sources */,
 				1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */,
 				1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */,
 				1A6AC9A21930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m in Sources */,

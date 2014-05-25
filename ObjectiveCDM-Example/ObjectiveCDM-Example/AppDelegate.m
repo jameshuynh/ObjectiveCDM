@@ -17,7 +17,9 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     DownloadViewController *mainViewController = [[DownloadViewController alloc] init];
-    self.window.rootViewController = mainViewController;
+    UINavigationController *navigationController = [[UINavigationController alloc] init];
+    navigationController.viewControllers = @[mainViewController];
+    self.window.rootViewController = navigationController;
     return YES;
 }
 

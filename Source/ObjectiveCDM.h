@@ -43,6 +43,7 @@
 - (void) didReachProgress:(float)progress;
 - (void) didHitDownloadErrorOnTask:(ObjectiveCDMDownloadTask* ) task;
 - (void) didFinishAll;
+- (void) didReachIndividualProgress:(float)progress onDownloadTask:(ObjectiveCDMDownloadTask* ) task;
 @end
 
 @protocol ObjectiveCDMDataDelegate

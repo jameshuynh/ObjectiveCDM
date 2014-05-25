@@ -58,6 +58,7 @@
         if(taskInfo[@"identifier"]) {
             downloadTask.identifier = taskInfo[@"identifier"];
         }//end if
+        downloadTask.position = [downloadInputs count];
         [urls addObject:urlString];
         [downloadInputs addObject:downloadTask];
     }//end if
@@ -87,7 +88,7 @@
     }//end else
 }
 
-- (void) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask {
+- (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask {
     // task is already inside the session - do nothing
     NSURL *url = downloadTask.originalRequest.URL;
     ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:url.absoluteString];
@@ -96,10 +97,15 @@
     if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
         downloadTaskInfo.totalBytesExpectedToWrite = downloadTask.countOfBytesExpectedToReceive;
     }//end if
+    
+    return downloadTaskInfo;
 }
 
-- (void) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten {
-    [self downloadInfoOfTaskUrl:url].totalBytesWritten = totalBytesWritten;
+- (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten {
+    ObjectiveCDMDownloadTask *downloadTask = [self downloadInfoOfTaskUrl:url];
+    downloadTask.totalBytesWritten = totalBytesWritten;
+    
+    return downloadTask;
 }
 
 - (NSArray *)downloadObjects {

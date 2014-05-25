@@ -94,7 +94,8 @@
             NSURL *url = downloadTaskInfo.url;
             for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
                 if([[url absoluteString] isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
-                    [batch captureDownloadingInfoOfDownloadTask:downloadTask];
+                    ObjectiveCDMDownloadTask *downloadTaskInfo = [batch captureDownloadingInfoOfDownloadTask:downloadTask];
+                    [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
                     isDownloading = YES;
                 }
             }//end for
@@ -111,8 +112,13 @@
 - (void) postProgressToUIDelegate {
     [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
         float overallProgress = [self overallProgress];
-        NSLog(@"Overall Progress is %f", overallProgress);
-        [self.uiDelegate didReachProgress:[self overallProgress]];
+        [self.uiDelegate didReachProgress:overallProgress];
+    }];
+}
+
+- (void) postToUIDelegateOnIndividualDownload:(ObjectiveCDMDownloadTask *)task {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        [self.uiDelegate didReachIndividualProgress:task.downloadingProgress onDownloadTask:task];
     }];
 }
 
@@ -141,9 +147,10 @@ didCompleteWithError:(NSError *)error {
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
     float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
-    [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten];
+    ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten];
     if(self.uiDelegate) {
         [self postProgressToUIDelegate];
+        [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
     }//end if
 }
 
