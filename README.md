@@ -64,7 +64,7 @@ ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
 
 ```objective-c
 ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
-[objectiveCDM setTotalBytes:1024];
+[objectiveCDM setTotalBytes:1048576];
 ```
 
 - By default, the checksum algorithm to verify the downloaded file is SHA1. You can change this by using
