@@ -42,7 +42,7 @@
 @protocol ObjectiveCDMUIDelegate
 - (void) didReachProgress:(float)progress;
 - (void) didHitDownloadErrorOnTask:(ObjectiveCDMDownloadTask* ) task;
-- (void) didFinish;
+- (void) didFinishAll;
 @end
 
 @protocol ObjectiveCDMDataDelegate

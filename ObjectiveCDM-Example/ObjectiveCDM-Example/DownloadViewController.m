@@ -88,7 +88,7 @@
     [label setText:formattedPercentage];
 }
 
-- (void) didFinish {
+- (void) didFinishAll {
     UILabel *label = (UILabel *)[self.view viewWithTag:1001];
     [label setText:@"COMPLETED!"];
 }

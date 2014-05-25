@@ -160,7 +160,7 @@ didCompleteWithError:(NSError *)error {
                 [self.dataDelegate didFinishDownloadObject:[currentBatch downloadInfoOfTaskUrl:downloadURL]];
             }//end if
             if(currentBatch.completed && self.uiDelegate) {
-                [self.uiDelegate didFinish];
+                [self.uiDelegate didFinishAll];
             }//end if
         } else {
             // clean up and redownload file
