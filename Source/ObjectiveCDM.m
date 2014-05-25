@@ -122,7 +122,7 @@
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
-    ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch downloadInfoOfTaskUrl:downloadTask.originalRequest.URL.absoluteString];
+    ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch downloadInfoOfTaskUrl:downloadURL];
     if(downloadTaskInfo) {
         BOOL finalResult = [currentBatch handleDownloadedFileAt:location forDownloadURL:downloadURL];
         if(finalResult) {

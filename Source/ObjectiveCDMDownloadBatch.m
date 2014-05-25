@@ -83,8 +83,6 @@
         }//end if
         return isVerified;
     }//end else
-    
-    
 }
 
 - (void) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask {

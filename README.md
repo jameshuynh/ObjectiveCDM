@@ -51,6 +51,31 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
   
 ```
 
+#### ObjectiveCDM
+
+- You can set initial downloaded bytes - this will help to calculate the overall progress if you have already have some downloaded files from last download
+
+```objective-c
+ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
+[objectiveCDM setInitialDownloadedBytes:1024];
+```
+
+- You can set total bytes for helping to calculate the overall progress. This total byte will override the calculation of the actual total bytes to be received of each download.
+
+```objective-c
+ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
+[objectiveCDM setTotalBytes:1024];
+```
+
+- By default, the checksum algorithm to verify the downloaded file is SHA1. You can change this by using
+
+``` objective-c
+ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
+objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
+// objectiveCDM.fileHashAlgorithm = FileHashAlgorithmSHA512;
+// objectiveCDM.fileHashAlgorithm = FileHashAlgorithmSHA1; // default
+```
+
 #### ObjectiveCDMUIDelegate
 
 `ObjectiveCDMUIDelegate` can be used to update progress of the batch download and update finish status of the whole batch
