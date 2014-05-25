@@ -21,26 +21,52 @@
         // Custom initialization
         downloadLogs = [[NSMutableArray alloc] initWithArray:@[]];
         downloadTaskInfos = @[
-          [[NSMutableDictionary alloc] initWithDictionary:@{
-             @"url": @"http://87.76.16.10/test10.zip",
-             @"destination": @"test/test10.zip",
-             @"fileSize": [NSNumber numberWithLongLong:11536384],
-             @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
-             @"identifier": @"Content-1001",
-             @"progress": @0,
-             @"completed": @NO
-          }],
-          [[NSMutableDictionary alloc] initWithDictionary:@{
-             @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
-             @"destination": @"test/test100.zip",
-             @"fileSize": [NSNumber numberWithLongLong:104874307],
-             @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
-             @"identifier": @"Content-1002",
-             @"progress": @0,
-             @"completed": @NO
-          }]
-         ];
-
+            [[NSMutableDictionary alloc] initWithDictionary:@{
+                @"url": @"http://87.76.16.10/test10.zip",
+                @"destination": @"test/test10.zip",
+                @"fileSize": [NSNumber numberWithLongLong:11536384],
+                @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
+                @"identifier": @"Content-1001",
+                @"progress": @0,
+                @"completed": @NO
+            }],
+            [[NSMutableDictionary alloc] initWithDictionary:@{
+                @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
+                @"destination": @"test/peace.zip",
+                @"fileSize": [NSNumber numberWithLongLong:627874],
+                @"checksum": @"0c0fe2686a45b3607dbb47690eadb89065341e95",
+                @"identifier": @"Content-1002",
+                @"progress": @0,
+                @"completed": @NO
+            }],
+            [[NSMutableDictionary alloc] initWithDictionary:@{
+                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_problem.ZIP",
+                @"destination": @"test/peace_problem.zip",
+                @"fileSize": [NSNumber numberWithLongLong:294093],
+                @"checksum": @"d742448fd7c9a17e879441a29a4b32c4a928b9cf",
+                @"identifier": @"Content-1003",
+                @"progress": @0,
+                @"completed": @NO
+            }],
+            [[NSMutableDictionary alloc] initWithDictionary:@{
+                @"url": @"https://archive.org/download/BreakbeatSamplePack1-8zip/BreakPack5.zip",
+                @"destination": @"test/BreakPack5.zip",
+                @"fileSize": [NSNumber numberWithLongLong:5366561],
+                @"checksum": @"4b18f3bbe5d0b7b6aa6b44e11ecaf303d442a7e5",
+                @"identifier": @"Content-1004",
+                @"progress": @0,
+                @"completed": @NO
+            }],
+            [[NSMutableDictionary alloc] initWithDictionary:@{
+                @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
+                @"destination": @"test/test100.zip",
+                @"fileSize": [NSNumber numberWithLongLong:104874307],
+                @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
+                @"identifier": @"Content-1005",
+                @"progress": @0,
+                @"completed": @NO
+            }]
+        ];
     }
     return self;
 }
@@ -68,7 +94,7 @@
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     
-    individualProgressViewsContainer = [[UITableView alloc] initWithFrame:CGRectMake(0, 165, screenWidth, 200)];
+    individualProgressViewsContainer = [[UITableView alloc] initWithFrame:CGRectMake(0, 165, screenWidth, 300)];
     individualProgressViewsContainer.dataSource = self;
     individualProgressViewsContainer.delegate = self;
     [self.view addSubview:individualProgressViewsContainer];
@@ -92,14 +118,16 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self setUpOverallProgressView];
     [self setupIndividualProgressView];
-    [self setupLogView];
+    // [self setupLogView];
     self.navigationItem.title = @"Batch Download";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(downloadManyFilesTest:)];
     _objectiveCDM = [ObjectiveCDM sharedInstance];
     _objectiveCDM.uiDelegate = self;
     _objectiveCDM.dataDelegate = self;
-    [_objectiveCDM setTotalBytes:232821382];
-    [_objectiveCDM setInitialDownloadedBytes:116410691];
+    
+    // if you want to set total bytes and initial downloaded bytes
+    // [_objectiveCDM setTotalBytes:232821382];
+    // [_objectiveCDM setInitialDownloadedBytes:116410691];
 }
 
 - (void) downloadManyFilesTest:(UIBarButtonItem *)startButton {
