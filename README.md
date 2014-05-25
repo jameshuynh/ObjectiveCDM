@@ -1,6 +1,6 @@
 ### ObjectiveCDM: A Dead Simple Download Manager
 
-ObjectiveCDM is a download manager built on top of NSURLSession for iOS.
+ObjectiveCDM is a download manager built on top of NSURLSession for iOS. It supports auto resume on internet connection recover. 
 
 Choose ObjectiveCDM for your next project as your download manager!
 
@@ -14,6 +14,13 @@ Choose ObjectiveCDM for your next project as your download manager!
 platform :ios, '7.0'
 pod "ObjectiveCDM", "~> 1.0.0"
 ```
+
+### Features
+
+- Ability to download a batch of files.
+- Checksum / File Size verification once a file has been downloaded. Redownload file if checksum / file size is mismatched.
+- Auto resume on internet connection recovery.
+- Overall Progress & individual download progress
 
 ### Usage
 
@@ -125,6 +132,14 @@ NSString *checksum = downloadTaskInfo.checksum;
 NSString *identifier = downloadTaskInfo.identifier;
 ```
 
+### Contribution
+
+Contribution and Suggestion is very much appreciated :). Please fork and send your pull request!
+
+### Roadmap
+
+- Auto Test Coverage
+- Split download (i.e. download 1 file using many threads) to speed up download
 
 ### License
 
