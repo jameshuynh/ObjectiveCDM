@@ -98,7 +98,7 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
   // ... update progress bar or progress text here
 }
 
-- (void) didFinish {
+- (void) didFinishAll {
   // this method is also run on main thread
   // ... update completed status of the whole batch
 }
