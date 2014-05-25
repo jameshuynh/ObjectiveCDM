@@ -39,13 +39,15 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
         @"url": @"http://87.76.16.10/test10.zip",
         @"destination": @"test/test10.zip",
         @"fileSize": [NSNumber numberWithLongLong:11536384],
-        @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f"
+        @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
+        @"identifier": @"Content-1001"
     },
     @{
         @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
         @"destination": @"test/test100.zip",
         @"fileSize": [NSNumber numberWithLongLong:104874307],
-        @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900"
+        @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
+        @"identifier": @"Content-1002"
     }
 ]];
   
@@ -103,12 +105,26 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
 // ObjectiveCDM* objectiveCDM = [ObjectiveCDM sharedInstance];
 // objectiveCDM.dataDelegate = self;
 // ...
-- (void) didFinishDownloadObject:(ObjectiveCDMDownloadTask *)downloadInfo {
+- (void) didFinishDownloadObject:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
   // this method is run on background thread
   // finish a task with ObjectiveCDMDownloadTask downloadInfo
 }
 
 ```
+
+#### ObjectiveCDMDownloadTask
+
+In `didFinishDownloadObject` you will receive an `ObjectiveCDMDownloadTask` instance. Inside this instance, you will be able to retrieve the following attributes
+
+```objective-c
+NSURL *url = downloadTaskInfo.url;
+NSString *urlString = downloadTaskInfo.urlString;
+NSString *destination = downloadTaskInfo.destination; // destination is the full path to the downloaded file
+NSString *fileName = downloadTaskInfo.fileName;
+NSString *checksum = downloadTaskInfo.checksum;
+NSString *identifier = downloadTaskInfo.identifier;
+```
+
 
 ### License
 

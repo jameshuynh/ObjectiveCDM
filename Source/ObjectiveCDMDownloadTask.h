@@ -24,6 +24,7 @@
 @property(nonatomic, retain) NSString* fileName;
 @property(nonatomic, retain) NSString* checkSum;
 @property(nonatomic, retain) NSError* error;
+@property(nonatomic, retain) NSString* identifier;
 
 - (instancetype) initWithURLString:(NSString *)urlString
                  withDestination:(NSString *)destination

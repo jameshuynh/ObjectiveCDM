@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ObjectiveCDMDownloadBatch.h"
 #import "ObjectiveCDMDownloadTask.h"
+#import "Reachability.h"
 
 @class ObjectiveCDMDownloadBatch;
 @protocol ObjectiveCDMUIDelegate;
@@ -19,6 +20,7 @@
     ObjectiveCDMDownloadBatch* currentBatch;
     int64_t initialDownloadedBytes;
     int64_t totalBytes;
+    Reachability *internetReachability;
 }
 
 + (instancetype) sharedInstance;

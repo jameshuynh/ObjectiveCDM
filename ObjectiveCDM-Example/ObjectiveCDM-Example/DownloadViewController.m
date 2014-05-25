@@ -26,7 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self testInternetConnection];
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 50, 320, 80)];
@@ -63,15 +62,17 @@
           @"url": @"http://87.76.16.10/test10.zip",
           @"destination": @"test/test10.zip",
           @"fileSize": [NSNumber numberWithLongLong:11536384],
-          @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f"
-          },
+          @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
+          @"identifier": @"Content-1001"
+      },
       @{
           @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
           @"destination": @"test/test100.zip",
           @"fileSize": [NSNumber numberWithLongLong:104874307],
-          @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900"
-          }
-      ]];
+          @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
+          @"identifier": @"Content-1002"
+      }
+    ]];
 
 }
 
@@ -96,37 +97,6 @@
     NSString *errorDescription = [task fullErrorDescription];
     [downloadLogs addObject:errorDescription];
     [downloadLogsView setText:[downloadLogs componentsJoinedByString:@"\n"]];
-}
-
-# pragma Reachability Delegate
-// Checks if we have an internet connection or not
-- (void)testInternetConnection {
-    internetReachability = [Reachability reachabilityWithHostName:@"www.google.com"];
-    
-    // Internet is reachable
-    __weak DownloadViewController* _self = self;
-    internetReachability.reachableBlock = ^(Reachability *reach) {
-        // Update the UI on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Yayyy, we have the interwebs!");
-            if(_self.objectiveCDM) {
-                [_self.objectiveCDM continueInCompletedDownloads];
-            }//end if
-        });
-    };
-    
-    // Internet is not reachable
-    internetReachability.unreachableBlock = ^(Reachability *reach) {
-        // Update the UI on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Someone broke the internet :(");
-            if(_self.objectiveCDM) {
-                [_self.objectiveCDM suspendAllOnGoingDownloads];
-            }//end if
-        });
-    };
-    
-    [internetReachability startNotifier];
 }
 
 /*

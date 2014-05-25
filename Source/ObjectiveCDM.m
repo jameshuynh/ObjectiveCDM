@@ -18,6 +18,7 @@
         [sharedManager setInitialDownloadedBytes:0];
         [sharedManager setTotalBytes:0];
         ((ObjectiveCDM *)sharedManager).fileHashAlgorithm = FileHashAlgorithmSHA1;
+        [sharedManager listenToInternetConnectionChange];
     });
     return sharedManager;
 }
@@ -172,5 +173,32 @@ didCompleteWithError:(NSError *)error {
         // ignore -- not my task
     }
 }
+
+// Checks if we have an internet connection or not
+- (void)listenToInternetConnectionChange {
+    internetReachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+    
+    // Internet is reachable
+    __weak ObjectiveCDM* _weakSelf = self;
+    internetReachability.reachableBlock = ^(Reachability *reach) {
+        // Update the UI on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Yayyy, we have the interwebs!");
+            [_weakSelf continueInCompletedDownloads];
+        });
+    };
+    
+    // Internet is not reachable
+    internetReachability.unreachableBlock = ^(Reachability *reach) {
+        // Update the UI on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Someone broke the internet :(");
+            [_weakSelf suspendAllOnGoingDownloads];
+        });
+    };
+    
+    [internetReachability startNotifier];
+}
+
 
 @end

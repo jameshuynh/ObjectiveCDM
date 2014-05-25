@@ -55,7 +55,9 @@
                          andFileHashAlgorithm:fileHashAlgorithm];
 ;
         }//end else
-        
+        if(taskInfo[@"identifier"]) {
+            downloadTask.identifier = taskInfo[@"identifier"];
+        }//end if
         [urls addObject:urlString];
         [downloadInputs addObject:downloadTask];
     }//end if
