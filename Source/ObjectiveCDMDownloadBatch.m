@@ -173,7 +173,7 @@
             self.completed = NO;
             return;
         }//end if
-    }
+    }//end for
     
     self.completed = YES;
 }

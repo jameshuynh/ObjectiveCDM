@@ -11,6 +11,7 @@
 @interface DownloadTaskProgressTableCell : UITableViewCell {
     UIProgressView* individualProgress;
     UILabel *downloadUrlLabel;
+    UILabel *progressLabel;
 }
 - (void) displayProgressForDownloadTask:(NSDictionary *)downloadTaskInfo;
 @end

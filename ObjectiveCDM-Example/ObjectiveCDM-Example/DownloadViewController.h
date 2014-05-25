@@ -10,7 +10,7 @@
 #import "ObjectiveCDM.h"
 #import "Reachability.h"
 
-@interface DownloadViewController : UIViewController <ObjectiveCDMUIDelegate, ObjectiveCDMDataDelegate, UITableViewDataSource> {
+@interface DownloadViewController : UIViewController <ObjectiveCDMUIDelegate, ObjectiveCDMDataDelegate, UITableViewDataSource, UITableViewDelegate> {
     NSMutableArray *downloadLogs;
     UITextView *downloadLogsView;
     Reachability *internetReachability;

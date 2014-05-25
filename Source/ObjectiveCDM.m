@@ -46,7 +46,8 @@
     if(actualTotalBytes == 0) {
         return 0;
     }//end if
-    return (double)actualDownloadedBytes / (double)actualTotalBytes;
+    float progress = (double)actualDownloadedBytes / (double)actualTotalBytes;
+    return progress;
 }
 
 - (NSURLSession *)session {
@@ -99,12 +100,21 @@
                     isDownloading = YES;
                 }
             }//end for
-            if(isDownloading == NO) {
+            if(downloadTaskInfo.completed == YES) {
+                [self processCompletedDownload:downloadTaskInfo];
+                [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
+            } else if(isDownloading == NO) {
                 [batch startDownloadTask:downloadTaskInfo];
             }//end if
         }//end for
+        [batch updateCompleteStatus];
         if(self.uiDelegate) {
-            [self.uiDelegate didReachProgress:[self overallProgress]];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+                [self.uiDelegate didReachProgress:[self overallProgress]];
+            }];
+        }//end if
+        if(currentBatch.completed && self.uiDelegate) {
+            [self postCompleteAll];
         }//end if
     }];
 }
@@ -163,26 +173,41 @@ didCompleteWithError:(NSError *)error {
     if(downloadTaskInfo) {
         BOOL finalResult = [currentBatch handleDownloadedFileAt:location forDownloadURL:downloadURL];
         if(finalResult) {
-            if(self.dataDelegate) {
-                [self.dataDelegate didFinishDownloadObject:[currentBatch downloadInfoOfTaskUrl:downloadURL]];
-            }//end if
-            if(currentBatch.completed && self.uiDelegate) {
-                [self.uiDelegate didFinishAll];
-            }//end if
+            [self processCompletedDownload:downloadTaskInfo];
         } else {
             // clean up and redownload file
             [downloadTaskInfo cleanUp];
             [currentBatch startDownloadTask:downloadTaskInfo];
             [self postProgressToUIDelegate];
-        }
+        } //end else
     }//end if
     else {
         // ignore -- not my task
-    }
+    }//end else
+}
+
+- (void) processCompletedDownload:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
+    if(self.dataDelegate) {
+        [self.dataDelegate didFinishDownloadTask:downloadTaskInfo];
+    }//end if
+    if(self.uiDelegate) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+            [self.uiDelegate didFinishOnDownloadTaskUI:downloadTaskInfo];
+        }];
+    }//end if
+    if(currentBatch.completed && self.uiDelegate) {
+        [self postCompleteAll];
+    }//end if
+}
+
+- (void) postCompleteAll {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        [self.uiDelegate didFinishAll];
+    }];
 }
 
 // Checks if we have an internet connection or not
-- (void)listenToInternetConnectionChange {
+- (void) listenToInternetConnectionChange {
     internetReachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     
     // Internet is reachable

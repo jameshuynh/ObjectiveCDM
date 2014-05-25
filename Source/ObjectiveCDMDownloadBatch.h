@@ -37,6 +37,7 @@ typedef NSInteger FileHashAlgorithm;
 - (NSArray *)downloadObjects;
 - (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url;
 
+- (void) updateCompleteStatus;
 - (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten;
 - (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
 - (NSDictionary *) totalBytesWrittenAndReceived;

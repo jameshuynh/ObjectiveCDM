@@ -86,7 +86,16 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
     }//end if
     
-    [self cleanUp];
+    if([fileManager fileExistsAtPath:self.destination] == YES) {
+        // file exist at destination -> verify if this file has been downloaded before
+        if([self verifyDownload]) {
+            // retain file - this task has been completed
+        } else {
+            [self cleanUp];
+        }//end else
+    } else {
+        [self cleanUp];
+    }//end else
 }
 
 - (BOOL) verifyDownload {
@@ -110,6 +119,9 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     }
     if(isVerified) {
         self.completed = YES;
+    }//end if
+    if(self.completed) {
+        self.totalBytesWritten = self.totalBytesExpectedToWrite;
     }//end if
     return isVerified;
 }

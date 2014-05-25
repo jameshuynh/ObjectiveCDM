@@ -27,7 +27,8 @@
              @"fileSize": [NSNumber numberWithLongLong:11536384],
              @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
              @"identifier": @"Content-1001",
-             @"progress": @0
+             @"progress": @0,
+             @"completed": @NO
           }],
           [[NSMutableDictionary alloc] initWithDictionary:@{
              @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
@@ -35,7 +36,8 @@
              @"fileSize": [NSNumber numberWithLongLong:104874307],
              @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
              @"identifier": @"Content-1002",
-             @"progress": @0
+             @"progress": @0,
+             @"completed": @NO
           }]
          ];
 
@@ -54,6 +56,7 @@
     [overallProgressLabel setFont:[UIFont boldSystemFontOfSize:20]];
     overallProgressBar = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     overallProgressBar.frame = CGRectMake(80, 120, screenWidth - 160, 30);
+    overallProgressBar.progress = 0;
     [overallProgressBar setTransform:CGAffineTransformMakeScale(1.0, 3.0)];
     
     [self.view addSubview:overallProgressLabel];
@@ -67,9 +70,10 @@
     
     individualProgressViewsContainer = [[UITableView alloc] initWithFrame:CGRectMake(0, 165, screenWidth, 200)];
     individualProgressViewsContainer.dataSource = self;
+    individualProgressViewsContainer.delegate = self;
     [self.view addSubview:individualProgressViewsContainer];
     [individualProgressViewsContainer reloadData];
-    individualProgressViewsContainer.contentSize = CGSizeMake(screenWidth, [downloadTaskInfos count] * 45);
+    individualProgressViewsContainer.contentSize = CGSizeMake(screenWidth, [downloadTaskInfos count] * 65);
     [individualProgressViewsContainer setSeparatorInset:UIEdgeInsetsZero];
 }
 
@@ -89,17 +93,30 @@
     [self setUpOverallProgressView];
     [self setupIndividualProgressView];
     [self setupLogView];
-    
+    self.navigationItem.title = @"Batch Download";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(downloadManyFilesTest:)];
     _objectiveCDM = [ObjectiveCDM sharedInstance];
     _objectiveCDM.uiDelegate = self;
     _objectiveCDM.dataDelegate = self;
     [_objectiveCDM setTotalBytes:232821382];
     [_objectiveCDM setInitialDownloadedBytes:116410691];
-    [self downloadManyFilesTest];
 }
 
-- (void) downloadManyFilesTest {
-    [_objectiveCDM downloadBatch:downloadTaskInfos];
+- (void) downloadManyFilesTest:(UIBarButtonItem *)startButton {
+    UIApplication* app = [UIApplication sharedApplication];
+    if([[startButton title] isEqualToString:@"Resume"]) {
+        [_objectiveCDM continueInCompletedDownloads];
+        [startButton setTitle:@"Stop"];
+        app.networkActivityIndicatorVisible = YES;
+    } else if([[startButton title] isEqualToString:@"Start"]) {
+        [_objectiveCDM downloadBatch:downloadTaskInfos];
+        [startButton setTitle:@"Stop"];
+        app.networkActivityIndicatorVisible = YES;
+    } else if([[startButton title] isEqualToString:@"Stop"]) {
+        [_objectiveCDM suspendAllOnGoingDownloads];
+        [startButton setTitle:@"Resume"];
+        app.networkActivityIndicatorVisible = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -113,11 +130,19 @@
     float percentage = progress * 100.0;
     NSString* formattedPercentage = [NSString stringWithFormat:@"%.02f%%", percentage];
     [overallProgressLabel setText:formattedPercentage];
-    overallProgressBar.progress = progress;
+    [overallProgressBar setProgress:progress animated:NO];
 }
 
 - (void) didFinishAll {
     [overallProgressLabel setText:@"COMPLETED!"];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask *) downloadTask {
+    NSMutableDictionary *downloadTaskInfo = downloadTaskInfos[downloadTask.position];
+    downloadTaskInfo[@"completed"] = @YES;
+    NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:downloadTask.position inSection:0];
+    [individualProgressViewsContainer reloadRowsAtIndexPaths:@[rowToReload] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void) didHitDownloadErrorOnTask:(ObjectiveCDMDownloadTask* ) task {
@@ -135,14 +160,14 @@
 
 # pragma ObjectiveCDMDataDelegate
 
-- (void) didFinishDownloadObject:(ObjectiveCDMDownloadTask *)downloadInfo {
+- (void) didFinishDownloadTask:(ObjectiveCDMDownloadTask *)downloadInfo {
     // do anything with ObjectiveCDMDownloadTask instance
 }
 
 # pragma UITableView DataSource
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 45;
+    return 65;
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {

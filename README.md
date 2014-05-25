@@ -99,8 +99,18 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
 }
 
 - (void) didFinishAll {
-  // this method is also run on main thread
+  // this method is run on main thread
   // ... update completed status of the whole batch
+}
+
+- (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask *) task {
+  // this method is run on main thread
+  // ... update completed status of a download task 
+}
+
+- (void) didReachIndividualProgress:(float)progress onDownloadTask:(ObjectiveCDMDownloadTask* ) task {
+  // this method is run on main thread
+  // ... update progress of a task
 }
 ```
 
