@@ -13,4 +13,8 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+    #define DEBUG_VIEW(view) { view.layer.borderColor = [UIColor redColor].CGColor; view.layer.borderWidth = 1.0; }
+
 #endif
+

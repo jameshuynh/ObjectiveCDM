@@ -21,6 +21,8 @@
 		1A034E5819250F4F000685C9 /* ObjectiveCDM_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E5719250F4F000685C9 /* ObjectiveCDM_ExampleTests.m */; };
 		1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */; };
 		1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */; };
+		1A3BE3F01931A97D00852040 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A3BE3EF1931A97D00852040 /* SystemConfiguration.framework */; };
+		1A3BE3F41931AA2B00852040 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3BE3F31931AA2B00852040 /* Reachability.m */; };
 		1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3FDB971930371B00E3E95C /* DownloadViewController.m */; };
 		1A6AC9A21930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A11930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.m */; };
 		1A6AC9A61930F932003ECFC7 /* FileHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6AC9A51930F932003ECFC7 /* FileHash.m */; };
@@ -61,6 +63,10 @@
 		1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDM.m; sourceTree = "<group>"; };
 		1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadBatch.h; sourceTree = "<group>"; };
 		1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownloadBatch.m; sourceTree = "<group>"; };
+		1A3BE3E91931A62F00852040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		1A3BE3EF1931A97D00852040 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1A3BE3F21931AA2B00852040 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		1A3BE3F31931AA2B00852040 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		1A3FDB961930371B00E3E95C /* DownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
 		1A3FDB971930371B00E3E95C /* DownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
 		1A6AC9A01930CCF3003ECFC7 /* ObjectiveCDMDownloadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadTask.h; sourceTree = "<group>"; };
@@ -78,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A3BE3F01931A97D00852040 /* SystemConfiguration.framework in Frameworks */,
 				1A034E3519250F4F000685C9 /* CoreGraphics.framework in Frameworks */,
 				1A034E3719250F4F000685C9 /* UIKit.framework in Frameworks */,
 				1A034E3319250F4F000685C9 /* Foundation.framework in Frameworks */,
@@ -120,6 +127,8 @@
 		1A034E3119250F4F000685C9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A3BE3EF1931A97D00852040 /* SystemConfiguration.framework */,
+				1A3BE3E91931A62F00852040 /* CoreTelephony.framework */,
 				1A034E3219250F4F000685C9 /* Foundation.framework */,
 				1A034E3419250F4F000685C9 /* CoreGraphics.framework */,
 				1A034E3619250F4F000685C9 /* UIKit.framework */,
@@ -173,6 +182,7 @@
 		1A034E6119250FCC000685C9 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1A3BE3EB1931A7DB00852040 /* Reachability */,
 				1A6AC9A31930F929003ECFC7 /* FileHash */,
 				1A034E7919251DC4000685C9 /* ObjectiveCDM.h */,
 				1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */,
@@ -183,6 +193,23 @@
 			);
 			name = Source;
 			path = ../Source;
+			sourceTree = "<group>";
+		};
+		1A3BE3EB1931A7DB00852040 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				1A3BE3F11931AA2400852040 /* Library */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
+		1A3BE3F11931AA2400852040 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				1A3BE3F21931AA2B00852040 /* Reachability.h */,
+				1A3BE3F31931AA2B00852040 /* Reachability.m */,
+			);
+			name = Library;
 			sourceTree = "<group>";
 		};
 		1A6AC9A31930F929003ECFC7 /* FileHash */ = {
@@ -313,6 +340,7 @@
 			files = (
 				1A6AC9A61930F932003ECFC7 /* FileHash.m in Sources */,
 				1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */,
+				1A3BE3F41931AA2B00852040 /* Reachability.m in Sources */,
 				1A034E4319250F4F000685C9 /* AppDelegate.m in Sources */,
 				1A034E3F19250F4F000685C9 /* main.m in Sources */,
 				1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */,

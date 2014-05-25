@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DownloadViewController.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -19,7 +20,6 @@
     self.window.rootViewController = mainViewController;
     return YES;
 }
-
 
 
 - (void)applicationWillResignActive:(UIApplication *)application

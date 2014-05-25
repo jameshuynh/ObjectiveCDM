@@ -108,22 +108,29 @@
     return downloadInputs[[urls indexOfObject:url]];
 }
 
-- (void)startDownloadURL:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
+- (void)startDownloadTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:downloadTaskInfo.url];
     if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
         [self requestForTotalBytesForURL:downloadTaskInfo.url withCallback:^(int64_t totalBytesToBeReceived)  {
-            downloadTaskInfo.totalBytesExpectedToWrite = totalBytesToBeReceived;
-            [self downloadRequest:request];
+            downloadTaskInfo.totalBytesExpectedToWrite = totalBytesToBeReceived;            
+            [self downloadRequest:request ofTask:downloadTaskInfo];
         }];
     } else {
-        [self downloadRequest:request];
+        [self downloadRequest:request ofTask:downloadTaskInfo];
     }//end else
 }
 
-- (void) downloadRequest:(NSMutableURLRequest *)request {
+- (void) downloadRequest:(NSMutableURLRequest *)request ofTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
     [request setTimeoutInterval:90.0];
-    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
-    [downloadTask resume];
+    if(downloadTaskInfo.error) {
+        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithResumeData:downloadTaskInfo.error.userInfo[NSURLSessionDownloadTaskResumeData]];
+        [downloadTask resume];
+        downloadTaskInfo.error = nil;
+    } else {
+        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
+        [downloadTask resume];
+    }//end else
+    
 }
 
 - (void) requestForTotalBytesForURL:(NSURL *)url withCallback:(void (^)(int64_t))completed {
@@ -161,6 +168,42 @@
     }
     
     self.completed = YES;
+}
+
+- (void) continueAllInCompletedDownloadTask {
+    for(ObjectiveCDMDownloadTask *downloadTask in downloadInputs) {
+        if(downloadTask.completed == NO) {
+            [self startDownloadTask:downloadTask];
+        }//end if
+    }
+}
+
+- (void) resumeAllSuspendedTasks {
+    
+    [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+            NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
+            if([self downloadInfoOfTaskUrl:urlString]) {
+                if(downloadTask.state == NSURLSessionTaskStateSuspended) {
+                    [downloadTask resume];
+                }//end if
+            }//end if
+        }//end for
+    }];
+
+}
+
+- (void) suspendAllOnGoingDownloadTask {
+    [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+            NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
+            if([self downloadInfoOfTaskUrl:urlString]) {
+                if(downloadTask.state == NSURLSessionTaskStateRunning) {
+                    [downloadTask suspend];
+                }//end if
+            }//end if
+        }//end for
+    }];
 }
 
 @end

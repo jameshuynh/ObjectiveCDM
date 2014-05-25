@@ -23,6 +23,7 @@
 @property(nonatomic, retain) NSString* destination;
 @property(nonatomic, retain) NSString* fileName;
 @property(nonatomic, retain) NSString* checkSum;
+@property(nonatomic, retain) NSError* error;
 
 - (instancetype) initWithURLString:(NSString *)urlString
                  withDestination:(NSString *)destination
@@ -39,5 +40,8 @@
 - (void) cleanUp;
 - (float) downloadingProgress;
 - (BOOL) verifyDownload;
+- (NSString *) fullErrorDescription;
+- (BOOL) isHittingErrorBecauseOffline;
+- (BOOL) isHittingErrorConnectingToServer;
 
 @end

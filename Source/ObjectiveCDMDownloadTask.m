@@ -128,6 +128,7 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (void) cleanUp {
     self.completed = NO;
+    self.error = nil;
     self.totalBytesWritten = 0;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *removeFileError;
@@ -137,6 +138,30 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     if(removeFileError) {
         NSLog(@"Removing Existing File Error: %@", [removeFileError localizedDescription]);
     }//end if
+}
+
+- (BOOL) isHittingErrorBecauseOffline {
+    if(self.error) {
+        return self.error.code == -1009;
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL) isHittingErrorConnectingToServer {
+    if(self.error) {
+        return (self.error.code == -1004 || [[self.error description] isEqualToString:@"Could not connect to the server."]);
+    } else {
+        return NO;
+    }//end else
+}
+
+- (NSString *) fullErrorDescription {
+    if(self.error) {
+        return [NSString stringWithFormat:@"Downloading URL %@ failed because of error: %@ (Code %d)", self.urlString, [self.error localizedDescription], [self.error code]];
+    } else {
+        return @"No Error";
+    }//end else
 }
 
 @end

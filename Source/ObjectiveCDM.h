@@ -28,6 +28,8 @@
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination;
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
 - (void) cancelAllOutStandingTasks;
+- (void) continueInCompletedDownloads;
+- (void) suspendAllOnGoingDownloads;
 
 @property(nonatomic, assign) FileHashAlgorithm fileHashAlgorithm;
 @property(nonatomic, retain) id<ObjectiveCDMUIDelegate> uiDelegate;
@@ -37,6 +39,7 @@
 
 @protocol ObjectiveCDMUIDelegate
 - (void) didReachProgress:(float)progress;
+- (void) didHitDownloadErrorOnTask:(ObjectiveCDMDownloadTask* ) task;
 - (void) didFinish;
 @end
 

@@ -52,7 +52,7 @@
     static NSURLSession *backgroundSession = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:@"com.rubify.ObjectiveCDM"];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:@"com.ObjectiveCDM.NSURLSession"];
         config.HTTPMaximumConnectionsPerHost = 4;
         backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     });
@@ -77,6 +77,14 @@
     [self.session invalidateAndCancel];
 }
 
+- (void) continueInCompletedDownloads {
+    [currentBatch resumeAllSuspendedTasks];
+}
+
+- (void) suspendAllOnGoingDownloads {
+    [currentBatch suspendAllOnGoingDownloadTask];
+}
+
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch {
     currentBatch = batch;
     [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
@@ -90,7 +98,7 @@
                 }
             }//end for
             if(isDownloading == NO) {
-                [batch startDownloadURL:downloadTaskInfo];
+                [batch startDownloadTask:downloadTaskInfo];
             }//end if
         }//end for
         if(self.uiDelegate) {
@@ -99,22 +107,43 @@
     }];
 }
 
+- (void) postProgressToUIDelegate {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        float overallProgress = [self overallProgress];
+        NSLog(@"Overall Progress is %f", overallProgress);
+        [self.uiDelegate didReachProgress:[self overallProgress]];
+    }];
+}
+
+- (void) postDownloadErrorToUIDelegate:(ObjectiveCDMDownloadTask *)task {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        [self.uiDelegate didHitDownloadErrorOnTask:task];
+    }];
+}
+
 # pragma NSURLSessionDelegate
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)downloadTask
+didCompleteWithError:(NSError *)error {
+    if(error) {
+        NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
+        ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch downloadInfoOfTaskUrl:downloadURL];
+        if(downloadTaskInfo) {
+            downloadTaskInfo.error = error;
+            if(self.uiDelegate) {
+                [self postDownloadErrorToUIDelegate:downloadTaskInfo];
+            }//end if
+        }//end if
+    }//end if
+}
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
     float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
-    NSLog(@"Downloading Progress %f", progress);
     [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten];
     if(self.uiDelegate) {
         [self postProgressToUIDelegate];
     }//end if
-}
-
-- (void) postProgressToUIDelegate {
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [self.uiDelegate didReachProgress:[self overallProgress]];
-    }];
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTaskInfo didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes {
@@ -131,11 +160,11 @@
             }//end if
             if(currentBatch.completed && self.uiDelegate) {
                 [self.uiDelegate didFinish];
-            }
+            }//end if
         } else {
             // clean up and redownload file
             [downloadTaskInfo cleanUp];
-            [currentBatch startDownloadURL:downloadTaskInfo];
+            [currentBatch startDownloadTask:downloadTaskInfo];
             [self postProgressToUIDelegate];
         }
     }//end if
