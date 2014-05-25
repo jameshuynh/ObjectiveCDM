@@ -109,3 +109,7 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
 }
 
 ```
+
+### License
+
+ObjectiveCDM is available under the MIT license. See the LICENSE file for more info.
