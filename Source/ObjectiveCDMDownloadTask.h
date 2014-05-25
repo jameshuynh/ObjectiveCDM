@@ -18,7 +18,7 @@
 @property(nonatomic, assign) int64_t totalBytesWritten;
 @property(nonatomic, assign) int64_t totalBytesExpectedToWrite;
 
-@property(nonatomic, assign) int position;
+@property(nonatomic, assign) NSUInteger position;
 @property(nonatomic, retain) NSURL* url;
 @property(nonatomic, retain) NSString* urlString;
 @property(nonatomic, retain) NSString* destination;
