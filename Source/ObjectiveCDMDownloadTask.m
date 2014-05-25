@@ -170,7 +170,7 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (NSString *) fullErrorDescription {
     if(self.error) {
-        return [NSString stringWithFormat:@"Downloading URL %@ failed because of error: %@ (Code %d)", self.urlString, [self.error localizedDescription], [self.error code]];
+        // return [NSString stringWithFormat:@"Downloading URL %@ failed because of error: %@ (Code %d)", self.urlString, [self.error localizedDescription], [self.error code]];
     } else {
         return @"No Error";
     }//end else
