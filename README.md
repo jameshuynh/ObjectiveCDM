@@ -73,8 +73,6 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
   
 ```
 
-#### ObjectiveCDM
-
 - You can set initial downloaded bytes - this will help to calculate the overall progress if you have already have some downloaded files from last download
 
 ```objective-c
@@ -155,11 +153,19 @@ NSString *checksum = downloadTaskInfo.checksum;
 NSString *identifier = downloadTaskInfo.identifier;
 ```
 
+### Running Example
+
+```bash
+git clone git@github.com:jameshuynh/ObjectiveCDM.git
+```
+
+- Double click on `ObjectiveCDM-Example/ObjectiveCDM-Example.xcworkspace`
+
 ### Contribution
 
-Contribution and Suggestion is very much appreciated :). Please fork and send your pull request!
+Contribution, Suggestion and Issues are very much appreciated :). Please also fork and send your pull request!
 
-### Roadmap
+### Roadmap to version 2.0
 
 - Auto Test Coverage
 - Split download (i.e. download 1 file using many threads) to speed up download
