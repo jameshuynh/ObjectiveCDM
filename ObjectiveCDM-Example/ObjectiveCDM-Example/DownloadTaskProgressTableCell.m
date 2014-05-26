@@ -22,24 +22,31 @@
         progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 42, self.frame.size.width - 20, 15)];
         [progressLabel setFont:[UIFont systemFontOfSize:12]];
         [progressLabel setTextColor:[UIColor grayColor]];
+        
+        fileNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(155, 42, self.frame.size.width - 175, 15)];
+        [fileNameLabel setTextAlignment:NSTextAlignmentRight];
+        [fileNameLabel setFont:[UIFont systemFontOfSize:12]];
+        [fileNameLabel setTextColor:UIColorFromRGB(0x3186b6)];
+        
         [self.contentView addSubview:downloadUrlLabel];
         [self.contentView addSubview:individualProgress];
         [self.contentView addSubview:progressLabel];
+        [self.contentView addSubview:fileNameLabel];
         
     }
     return self;
 }
 
-- (void)displayProgressForDownloadTask:(NSDictionary *)downloadTaskInfo {
-    [downloadUrlLabel setText:downloadTaskInfo[@"url"]];
-    individualProgress.progress = [(NSNumber *)downloadTaskInfo[@"progress"] floatValue];
-    NSNumber *progress = (NSNumber *)downloadTaskInfo[@"progress"];
+- (void)displayProgressForDownloadTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
+    [downloadUrlLabel setText:downloadTaskInfo.urlString];
+    [fileNameLabel setText:downloadTaskInfo.fileName];
+    individualProgress.progress = downloadTaskInfo.cachedProgress;
     NSString *status = @"";
     // NSLog(@"download task info %@", downloadTaskInfo);
-    if([downloadTaskInfo[@"completed"] boolValue] == YES) {
+    if(downloadTaskInfo.completed == YES) {
         status = @"(Completed)";
     }//end if
-    [progressLabel setText:[NSString stringWithFormat:@"%.2f%% %@", [progress floatValue] * 100, status]];
+    [progressLabel setText:[NSString stringWithFormat:@"%.2f%% %@", downloadTaskInfo.cachedProgress * 100, status]];
 }
 
 - (void)awakeFromNib {

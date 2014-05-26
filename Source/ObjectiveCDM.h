@@ -27,6 +27,8 @@
 - (void) setInitialDownloadedBytes:(int64_t)initialDownloadedBytes;
 - (void) setTotalBytes:(int64_t)totalBytes;
 - (void) downloadBatch:(NSArray *)arrayOfDownloadInformation;
+- (NSArray *) addBatch:(NSArray *)arrayOfDownloadInformation;
+- (void) startDownloadingCurrentBatch;
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination;
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
 - (void) cancelAllOutStandingTasks;

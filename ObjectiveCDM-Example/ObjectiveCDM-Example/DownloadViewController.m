@@ -21,16 +21,14 @@
         // Custom initialization
         downloadLogs = [[NSMutableArray alloc] initWithArray:@[]];
         downloadTaskInfos = @[
-            [[NSMutableDictionary alloc] initWithDictionary:@{
+            @{
                 @"url": @"http://87.76.16.10/test10.zip",
                 @"destination": @"test/test10.zip",
                 @"fileSize": [NSNumber numberWithLongLong:11536384],
                 @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
-                @"identifier": @"Content-1001",
-                @"progress": @0,
-                @"completed": @NO
-            }],
-            [[NSMutableDictionary alloc] initWithDictionary:@{
+                @"identifier": @"Content-1001"
+            },
+            @{
                 @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
                 @"destination": @"test/peace.zip",
                 @"fileSize": [NSNumber numberWithLongLong:627874],
@@ -38,8 +36,8 @@
                 @"identifier": @"Content-1002",
                 @"progress": @0,
                 @"completed": @NO
-            }],
-            [[NSMutableDictionary alloc] initWithDictionary:@{
+            },
+            @{
                 @"url": @"http://www.colorado.edu/conflict/peace/download/peace_problem.ZIP",
                 @"destination": @"test/peace_problem.zip",
                 @"fileSize": [NSNumber numberWithLongLong:294093],
@@ -47,8 +45,8 @@
                 @"identifier": @"Content-1003",
                 @"progress": @0,
                 @"completed": @NO
-            }],
-            [[NSMutableDictionary alloc] initWithDictionary:@{
+            },
+            @{
                 @"url": @"https://archive.org/download/BreakbeatSamplePack1-8zip/BreakPack5.zip",
                 @"destination": @"test/BreakPack5.zip",
                 @"fileSize": [NSNumber numberWithLongLong:5366561],
@@ -56,8 +54,8 @@
                 @"identifier": @"Content-1004",
                 @"progress": @0,
                 @"completed": @NO
-            }],
-            [[NSMutableDictionary alloc] initWithDictionary:@{
+            },
+            @{
                 @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
                 @"destination": @"test/test100.zip",
                 @"fileSize": [NSNumber numberWithLongLong:104874307],
@@ -65,7 +63,16 @@
                 @"identifier": @"Content-1005",
                 @"progress": @0,
                 @"completed": @NO
-            }]
+            },
+            @{
+                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_treatment.ZIP",
+                @"destination": @"test/peace_treatment.zip",
+                @"fileSize": [NSNumber numberWithLongLong:523193],
+                @"checksum": @"60180da39e4bf4d16bd453eb6f6c6d97082ac47a",
+                @"identifier": @"Content-1006",
+                @"progress": @0,
+                @"completed": @NO
+            }
         ];
     }
     return self;
@@ -124,6 +131,7 @@
     _objectiveCDM = [ObjectiveCDM sharedInstance];
     _objectiveCDM.uiDelegate = self;
     _objectiveCDM.dataDelegate = self;
+    objectiveCDMDownloadingTasks = [_objectiveCDM addBatch:downloadTaskInfos];
     
     // if you want to set total bytes and initial downloaded bytes
     // [_objectiveCDM setTotalBytes:232821382];
@@ -137,7 +145,7 @@
         [startButton setTitle:@"Stop"];
         app.networkActivityIndicatorVisible = YES;
     } else if([[startButton title] isEqualToString:@"Start"]) {
-        [_objectiveCDM downloadBatch:downloadTaskInfos];
+        [_objectiveCDM startDownloadingCurrentBatch];
         [startButton setTitle:@"Stop"];
         app.networkActivityIndicatorVisible = YES;
     } else if([[startButton title] isEqualToString:@"Stop"]) {
@@ -167,8 +175,6 @@
 }
 
 - (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask *) downloadTask {
-    NSMutableDictionary *downloadTaskInfo = downloadTaskInfos[downloadTask.position];
-    downloadTaskInfo[@"completed"] = @YES;
     NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:downloadTask.position inSection:0];
     [individualProgressViewsContainer reloadRowsAtIndexPaths:@[rowToReload] withRowAnimation:UITableViewRowAnimationNone];
 }
@@ -180,9 +186,7 @@
 }
 
 - (void) didReachIndividualProgress:(float)progress onDownloadTask:(ObjectiveCDMDownloadTask* )downloadTask {
-    NSMutableDictionary *downloadTaskInfo = downloadTaskInfos[downloadTask.position];
     NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:downloadTask.position inSection:0];
-    downloadTaskInfo[@"progress"] = [NSNumber numberWithFloat:progress];
     [individualProgressViewsContainer reloadRowsAtIndexPaths:@[rowToReload] withRowAnimation:UITableViewRowAnimationNone];
 }
 
@@ -212,7 +216,7 @@
     if(!progressViewCell) {
         progressViewCell = [[DownloadTaskProgressTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }//end if
-    [progressViewCell displayProgressForDownloadTask:downloadTaskInfos[indexPath.row]];
+    [progressViewCell displayProgressForDownloadTask:objectiveCDMDownloadingTasks[indexPath.row]];
     
     return progressViewCell;
     

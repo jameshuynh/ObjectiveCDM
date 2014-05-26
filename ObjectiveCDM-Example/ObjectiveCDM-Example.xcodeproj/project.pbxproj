@@ -21,6 +21,8 @@
 		1A034E5819250F4F000685C9 /* ObjectiveCDM_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E5719250F4F000685C9 /* ObjectiveCDM_ExampleTests.m */; };
 		1A034E7B19251DC4000685C9 /* ObjectiveCDM.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */; };
 		1A034E7E19251E30000685C9 /* ObjectiveCDMDownloadBatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */; };
+		1A079154193365B600F99855 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1A079153193365B600F99855 /* README.md */; };
+		1A079156193366A500F99855 /* ObjectiveCDM.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 1A079155193366A500F99855 /* ObjectiveCDM.podspec */; };
 		1A3BE3F01931A97D00852040 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A3BE3EF1931A97D00852040 /* SystemConfiguration.framework */; };
 		1A3BE3F41931AA2B00852040 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3BE3F31931AA2B00852040 /* Reachability.m */; };
 		1A3FDB981930371B00E3E95C /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3FDB971930371B00E3E95C /* DownloadViewController.m */; };
@@ -64,6 +66,8 @@
 		1A034E7A19251DC4000685C9 /* ObjectiveCDM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDM.m; sourceTree = "<group>"; };
 		1A034E7C19251E30000685C9 /* ObjectiveCDMDownloadBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCDMDownloadBatch.h; sourceTree = "<group>"; };
 		1A034E7D19251E30000685C9 /* ObjectiveCDMDownloadBatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCDMDownloadBatch.m; sourceTree = "<group>"; };
+		1A079153193365B600F99855 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		1A079155193366A500F99855 /* ObjectiveCDM.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ObjectiveCDM.podspec; path = ../ObjectiveCDM.podspec; sourceTree = "<group>"; };
 		1A3BE3E91931A62F00852040 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		1A3BE3EF1931A97D00852040 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1A3BE3F21931AA2B00852040 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -187,6 +191,8 @@
 		1A034E6119250FCC000685C9 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1A079155193366A500F99855 /* ObjectiveCDM.podspec */,
+				1A079153193365B600F99855 /* README.md */,
 				1A3BE3EB1931A7DB00852040 /* Reachability */,
 				1A6AC9A31930F929003ECFC7 /* FileHash */,
 				1A034E7919251DC4000685C9 /* ObjectiveCDM.h */,
@@ -322,9 +328,11 @@
 				1A6AC9AC1930F958003ECFC7 /* NOTICE in Resources */,
 				1A6AC9A81930F93B003ECFC7 /* README.md in Resources */,
 				1A034E3D19250F4F000685C9 /* InfoPlist.strings in Resources */,
+				1A079154193365B600F99855 /* README.md in Resources */,
 				1A6AC9AA1930F947003ECFC7 /* LICENSE in Resources */,
 				1A034E4519250F4F000685C9 /* Images.xcassets in Resources */,
 				1A6AC9AF1930F967003ECFC7 /* CHANGELOG in Resources */,
+				1A079156193366A500F99855 /* ObjectiveCDM.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

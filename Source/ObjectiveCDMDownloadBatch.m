@@ -10,12 +10,11 @@
 
 @implementation ObjectiveCDMDownloadBatch
 
-- (instancetype) initWithDownloadSession:(NSURLSession *)inputSession andFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithmInput {
+- (instancetype) initWithFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithmInput {
     self = [super init];
     if(self) {
         downloadInputs = [[NSMutableArray alloc] initWithArray:@[]];
         urls = [[NSMutableArray alloc] initWithArray:@[]];
-        session = inputSession;
         fileHashAlgorithm = fileHashAlgorithmInput;
     }//end if
     return self;
@@ -176,6 +175,10 @@
     }//end for
     
     self.completed = YES;
+}
+
+- (void) setDownloadingSessionTo:(NSURLSession *)inputSession {
+    session = inputSession;
 }
 
 - (void) continueAllInCompletedDownloadTask {

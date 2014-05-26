@@ -18,6 +18,7 @@
     UITableView *individualProgressViewsContainer;
     UIProgressView *overallProgressBar;
     NSArray *downloadTaskInfos;
+    NSArray *objectiveCDMDownloadingTasks;
 }
 
 @property(nonatomic, retain) ObjectiveCDM* objectiveCDM;

@@ -61,16 +61,27 @@
     return backgroundSession;
 }
 
-- (void) downloadBatch:(NSArray *)arrayOfDownloadInformation {
-    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithDownloadSession:[self session] andFileHashAlgorithm:self.fileHashAlgorithm];
+// add a batch and prepare for download
+- (NSArray *) addBatch:(NSArray *)arrayOfDownloadInformation {
+    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithFileHashAlgorithm:self.fileHashAlgorithm];
     for(NSDictionary *dictionary in arrayOfDownloadInformation) {
         [batch addTask:dictionary];
     }//end for
-    [self startADownloadBatch:batch];
+    currentBatch = batch;
+    return [currentBatch downloadObjects];
+}
+
+- (void) startDownloadingCurrentBatch {
+    [self startADownloadBatch:currentBatch];
+}
+
+- (void) downloadBatch:(NSArray *)arrayOfDownloadInformation {
+    [self addBatch:arrayOfDownloadInformation];
+    [self startDownloadingCurrentBatch];
 }
 
 - (void) downloadURL:(NSString *)urlString to:(NSString *)destination {
-    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithDownloadSession:[self session] andFileHashAlgorithm:self.fileHashAlgorithm];
+    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithFileHashAlgorithm:self.fileHashAlgorithm];
     [batch addTask:@{@"url": urlString, @"destination":destination}];
     [self startADownloadBatch:batch];
 }
@@ -88,7 +99,7 @@
 }
 
 - (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch {
-    currentBatch = batch;
+    [batch setDownloadingSessionTo:[self session]];
     [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
         for(ObjectiveCDMDownloadTask *downloadTaskInfo in batch.downloadObjects) {
             BOOL isDownloading = NO;
@@ -128,7 +139,8 @@
 
 - (void) postToUIDelegateOnIndividualDownload:(ObjectiveCDMDownloadTask *)task {
     [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [self.uiDelegate didReachIndividualProgress:task.downloadingProgress onDownloadTask:task];
+        task.cachedProgress = task.downloadingProgress;
+        [self.uiDelegate didReachIndividualProgress:task.cachedProgress onDownloadTask:task];
     }];
 }
 

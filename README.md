@@ -1,6 +1,6 @@
 ### ObjectiveCDM: A Dead Simple Download Manager
 
-ObjectiveCDM is a download manager built on top of NSURLSession for iOS. It supports auto resume on internet connection recover. 
+ObjectiveCDM is a files download manager built on top of NSURLSession for iOS. It supports auto resume on internet connection recovery.
 
 Choose ObjectiveCDM for your next project as your download manager!
 
@@ -60,6 +60,39 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
   
 ```
 
+- Alternatively, you can add a batch to `objectiveCDM` instance first and then call `startDownloadingCurrentBatch` later
+
+```objective-c
+[objectiveCDM addBatch:@[
+    ...
+]];
+
+...
+
+[objectiveCDM startDownloadingCurrentBatch];
+  
+```
+
+
+
+[objectiveCDM addBatch:@[
+    @{
+        @"url": @"http://87.76.16.10/test10.zip",
+        @"destination": @"test/test10.zip",
+        @"fileSize": [NSNumber numberWithLongLong:11536384],
+        @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
+        @"identifier": @"Content-1001"
+    },
+    @{
+        @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
+        @"destination": @"test/test100.zip",
+        @"fileSize": [NSNumber numberWithLongLong:104874307],
+        @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
+        @"identifier": @"Content-1002"
+    }
+]];
+
+
 #### ObjectiveCDM
 
 - You can set initial downloaded bytes - this will help to calculate the overall progress if you have already have some downloaded files from last download
@@ -103,12 +136,12 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
   // ... update completed status of the whole batch
 }
 
-- (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask *) task {
+- (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask*) task {
   // this method is run on main thread
   // ... update completed status of a download task 
 }
 
-- (void) didReachIndividualProgress:(float)progress onDownloadTask:(ObjectiveCDMDownloadTask* ) task {
+- (void) didReachIndividualProgress:(float)progress onDownloadTask:(ObjectiveCDMDownloadTask*) task {
   // this method is run on main thread
   // ... update progress of a task
 }

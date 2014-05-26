@@ -16,11 +16,11 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "ObjectiveCDM"
-  s.version      = "1.0.0"
-  s.summary      = "Awesome Download Manager"
+  s.version      = "1.0.1"
+  s.summary      = "Dead Simple batch of file Download Manager"
 
   s.description  = <<-DESC
-                   Awesome Download Manager.
+                   ObjectiveCDM is a files download manager built on top of NSURLSession for iOS. It supports auto resume on internet connection recovery.
                    DESC
 
   s.homepage     = "http://github.com/jameshuynh/ObjectiveCDM"
@@ -51,7 +51,7 @@ Pod::Spec.new do |s|
   s.author             = { "James" => "james@rubify.com" }
   # Or just: s.author    = "James"
   # s.authors            = { "James" => "james@rubify.com" }
-  # s.social_media_url   = "http://twitter.com/James"
+  s.social_media_url   = "https://twitter.com/jameshu"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -73,7 +73,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "git@github.com:jameshuynh/ObjectiveCDM.git", :tag => "1.0.0" }
+  s.source       = { :git => "git@github.com:jameshuynh/ObjectiveCDM.git", :tag => "1.0.1" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

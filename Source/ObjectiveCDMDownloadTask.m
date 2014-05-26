@@ -89,6 +89,7 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     if([fileManager fileExistsAtPath:self.destination] == YES) {
         // file exist at destination -> verify if this file has been downloaded before
         if([self verifyDownload]) {
+            self.cachedProgress = 1;
             // retain file - this task has been completed
         } else {
             [self cleanUp];

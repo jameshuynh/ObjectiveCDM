@@ -5,31 +5,31 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>D2073B81-BFCF-453E-9939-EF4A1DDFB4A4</string>
+	<string>F8856EDB-920B-4E30-9461-7DB8D5A5FA11</string>
 	<key>IDESourceControlProjectName</key>
 	<string>ObjectiveCDM-Example</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>154EBE96-3856-4FC7-973B-3141E2BE42A4</key>
-		<string>ssh://bitbucket.org/jameshuynh/objectivecdm.git</string>
 		<key>32E579F9-1057-4061-A265-0ED75AC90C56</key>
 		<string>ssh://github.com/JonasGessner/JGDownloadAcceleration.git</string>
+		<key>AB9E4117-8095-4275-BBC8-669D215A632F</key>
+		<string>ssh://github.com/jameshuynh/ObjectiveCDM.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>ObjectiveCDM-Example/ObjectiveCDM-Example.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>154EBE96-3856-4FC7-973B-3141E2BE42A4</key>
-		<string>../../..</string>
 		<key>32E579F9-1057-4061-A265-0ED75AC90C56</key>
 		<string>../../../JGDownloadAcceleration</string>
+		<key>AB9E4117-8095-4275-BBC8-669D215A632F</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://bitbucket.org/jameshuynh/objectivecdm.git</string>
+	<string>ssh://github.com/jameshuynh/ObjectiveCDM.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>154EBE96-3856-4FC7-973B-3141E2BE42A4</string>
+	<string>AB9E4117-8095-4275-BBC8-669D215A632F</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -44,7 +44,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>154EBE96-3856-4FC7-973B-3141E2BE42A4</string>
+			<string>AB9E4117-8095-4275-BBC8-669D215A632F</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ObjectiveCDM</string>
 		</dict>

@@ -14,6 +14,7 @@
     FileHashAlgorithm fileHashAlgorithm;
 }
 
+@property(nonatomic, assign) float cachedProgress;
 @property(nonatomic, assign) BOOL completed;
 @property(nonatomic, assign) int64_t totalBytesWritten;
 @property(nonatomic, assign) int64_t totalBytesExpectedToWrite;

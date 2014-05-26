@@ -31,10 +31,11 @@ typedef NSInteger FileHashAlgorithm;
 
 @property(nonatomic, assign) BOOL completed;
 
-- (instancetype) initWithDownloadSession:(NSURLSession *)inputSession andFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithm;
+- (instancetype) initWithFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithmInput;
 - (void) addTask:(NSDictionary *)taskInfo;
 - (BOOL) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
 - (NSArray *)downloadObjects;
+- (void) setDownloadingSessionTo:(NSURLSession *)inputSession;
 - (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url;
 
 - (void) updateCompleteStatus;
