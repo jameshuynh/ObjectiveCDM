@@ -173,6 +173,11 @@ git clone git@github.com:jameshuynh/ObjectiveCDM.git
 ```
 
 - Double click on `ObjectiveCDM-Example/ObjectiveCDM-Example.xcworkspace`
+- `Cmd + R` to run the example project :-)
+
+<p align="left" >
+  <img src="https://raw.githubusercontent.com/jameshuynh/ObjectiveCDM/master/ObjectiveCDM-Example/screenshot.png" alt="Running Example" title="Running Example">
+</p>
 
 ### Contribution
 
