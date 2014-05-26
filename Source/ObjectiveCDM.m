@@ -71,6 +71,14 @@
     return [currentBatch downloadObjects];
 }
 
+- (NSArray *) downloadingTasks {
+    if(currentBatch) {
+        return [currentBatch downloadObjects];
+    } else {
+        return @[];
+    }
+}
+
 - (void) startDownloadingCurrentBatch {
     [self startADownloadBatch:currentBatch];
 }
@@ -80,10 +88,33 @@
     [self startDownloadingCurrentBatch];
 }
 
-- (void) downloadURL:(NSString *)urlString to:(NSString *)destination {
-    ObjectiveCDMDownloadBatch *batch = [[ObjectiveCDMDownloadBatch alloc] initWithFileHashAlgorithm:self.fileHashAlgorithm];
-    [batch addTask:@{@"url": urlString, @"destination":destination}];
-    [self startADownloadBatch:batch];
+- (ObjectiveCDMDownloadTask *) addDownloadTask:(NSDictionary *)dictionary {
+    ObjectiveCDMDownloadTask *downloadTaskInfo = nil;
+    if(!currentBatch) {
+        currentBatch = [[ObjectiveCDMDownloadBatch alloc] initWithFileHashAlgorithm:self.fileHashAlgorithm];
+    }
+    downloadTaskInfo = [currentBatch addTask:dictionary];
+    if(downloadTaskInfo) {
+        NSLog(@"current batch is downloading %d", [currentBatch isDownloading]);
+        if(downloadTaskInfo.completed) {
+            [self processCompletedDownload:downloadTaskInfo];
+            [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
+        } else if([currentBatch isDownloading]) {
+            [currentBatch startDownloadTask:downloadTaskInfo];
+        }//end if
+        
+        [currentBatch updateCompleteStatus];
+        if(self.uiDelegate) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+                [self.uiDelegate didReachProgress:[self overallProgress]];
+            }];
+        }//end if
+        if(currentBatch.completed && self.uiDelegate) {
+            [self postCompleteAll];
+        }//end if
+    }//end if
+    
+    return downloadTaskInfo;
 }
 
 - (void) cancelAllOutStandingTasks {
@@ -170,9 +201,11 @@ didCompleteWithError:(NSError *)error {
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
     float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
     ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten];
-    if(self.uiDelegate) {
-        [self postProgressToUIDelegate];
-        [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
+    if(downloadTaskInfo) {
+        if(self.uiDelegate) {
+            [self postProgressToUIDelegate];
+            [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
+        }//end if
     }//end if
 }
 

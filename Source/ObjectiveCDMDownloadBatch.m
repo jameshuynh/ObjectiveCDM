@@ -20,7 +20,7 @@
     return self;
 }
 
-- (void) addTask:(NSDictionary *)taskInfo {
+- (ObjectiveCDMDownloadTask *) addTask:(NSDictionary *)taskInfo {
     NSString *urlString = nil;
     BOOL isURLString = YES;
     if([taskInfo[@"url"] isKindOfClass:[NSURL class]]) {
@@ -60,7 +60,11 @@
         downloadTask.position = [downloadInputs count];
         [urls addObject:urlString];
         [downloadInputs addObject:downloadTask];
+        
+        return downloadTask;
     }//end if
+    
+    return nil;
 }
 
 - (BOOL) isTaskExistWithURL:(NSString *)urlString andDestination:(NSString *)destination {
@@ -91,18 +95,21 @@
     // task is already inside the session - do nothing
     NSURL *url = downloadTask.originalRequest.URL;
     ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:url.absoluteString];
-    downloadTaskInfo.totalBytesWritten = downloadTask.countOfBytesReceived;
+    if(downloadTaskInfo) {
+        downloadTaskInfo.totalBytesWritten = downloadTask.countOfBytesReceived;
 
-    if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
-        downloadTaskInfo.totalBytesExpectedToWrite = downloadTask.countOfBytesExpectedToReceive;
+        if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
+            downloadTaskInfo.totalBytesExpectedToWrite = downloadTask.countOfBytesExpectedToReceive;
+        }//end if
     }//end if
-    
     return downloadTaskInfo;
 }
 
 - (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten {
     ObjectiveCDMDownloadTask *downloadTask = [self downloadInfoOfTaskUrl:url];
-    downloadTask.totalBytesWritten = totalBytesWritten;
+    if(downloadTask) {
+        downloadTask.totalBytesWritten = totalBytesWritten;
+    }//end if
     
     return downloadTask;
 }
@@ -112,7 +119,12 @@
 }
 
 - (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url {
-    return downloadInputs[[urls indexOfObject:url]];
+    NSInteger indexOfObject = [urls indexOfObject:url];
+    if(indexOfObject != NSNotFound) {
+        return downloadInputs[[urls indexOfObject:url]];
+    } else {
+        return nil;
+    }//end else
 }
 
 - (void)startDownloadTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
@@ -215,6 +227,10 @@
             }//end if
         }//end for
     }];
+}
+
+- (BOOL) isDownloading {
+    return !!session;
 }
 
 @end

@@ -10,7 +10,7 @@
 #import "ObjectiveCDM.h"
 #import "Reachability.h"
 
-@interface DownloadViewController : UIViewController <ObjectiveCDMUIDelegate, ObjectiveCDMDataDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface DownloadViewController : UIViewController <ObjectiveCDMUIDelegate, ObjectiveCDMDataDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate> {
     NSMutableArray *downloadLogs;
     UITextView *downloadLogsView;
     Reachability *internetReachability;
@@ -19,6 +19,8 @@
     UIProgressView *overallProgressBar;
     NSArray *downloadTaskInfos;
     NSArray *objectiveCDMDownloadingTasks;
+
+    NSString *currentInputURL;
 }
 
 @property(nonatomic, retain) ObjectiveCDM* objectiveCDM;

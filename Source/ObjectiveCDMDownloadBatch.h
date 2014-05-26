@@ -32,7 +32,7 @@ typedef NSInteger FileHashAlgorithm;
 @property(nonatomic, assign) BOOL completed;
 
 - (instancetype) initWithFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithmInput;
-- (void) addTask:(NSDictionary *)taskInfo;
+- (ObjectiveCDMDownloadTask *) addTask:(NSDictionary *)taskInfo;
 - (BOOL) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
 - (NSArray *)downloadObjects;
 - (void) setDownloadingSessionTo:(NSURLSession *)inputSession;
@@ -42,8 +42,9 @@ typedef NSInteger FileHashAlgorithm;
 - (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten;
 - (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
 - (NSDictionary *) totalBytesWrittenAndReceived;
-- (void)startDownloadTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo;
+- (void) startDownloadTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo;
 - (void) continueAllInCompletedDownloadTask;
 - (void) suspendAllOnGoingDownloadTask;
 - (void) resumeAllSuspendedTasks;
+- (BOOL) isDownloading;
 @end

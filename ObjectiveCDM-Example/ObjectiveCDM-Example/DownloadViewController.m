@@ -27,52 +27,52 @@
                 @"fileSize": [NSNumber numberWithLongLong:11536384],
                 @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
                 @"identifier": @"Content-1001"
-            },
-            @{
-                @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
-                @"destination": @"test/peace.zip",
-                @"fileSize": [NSNumber numberWithLongLong:627874],
-                @"checksum": @"0c0fe2686a45b3607dbb47690eadb89065341e95",
-                @"identifier": @"Content-1002",
-                @"progress": @0,
-                @"completed": @NO
-            },
-            @{
-                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_problem.ZIP",
-                @"destination": @"test/peace_problem.zip",
-                @"fileSize": [NSNumber numberWithLongLong:294093],
-                @"checksum": @"d742448fd7c9a17e879441a29a4b32c4a928b9cf",
-                @"identifier": @"Content-1003",
-                @"progress": @0,
-                @"completed": @NO
-            },
-            @{
-                @"url": @"https://archive.org/download/BreakbeatSamplePack1-8zip/BreakPack5.zip",
-                @"destination": @"test/BreakPack5.zip",
-                @"fileSize": [NSNumber numberWithLongLong:5366561],
-                @"checksum": @"4b18f3bbe5d0b7b6aa6b44e11ecaf303d442a7e5",
-                @"identifier": @"Content-1004",
-                @"progress": @0,
-                @"completed": @NO
-            },
-            @{
-                @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
-                @"destination": @"test/test100.zip",
-                @"fileSize": [NSNumber numberWithLongLong:104874307],
-                @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
-                @"identifier": @"Content-1005",
-                @"progress": @0,
-                @"completed": @NO
-            },
-            @{
-                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_treatment.ZIP",
-                @"destination": @"test/peace_treatment.zip",
-                @"fileSize": [NSNumber numberWithLongLong:523193],
-                @"checksum": @"60180da39e4bf4d16bd453eb6f6c6d97082ac47a",
-                @"identifier": @"Content-1006",
-                @"progress": @0,
-                @"completed": @NO
             }
+//            , @{
+//                @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
+//                @"destination": @"test/peace.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:627874],
+//                @"checksum": @"0c0fe2686a45b3607dbb47690eadb89065341e95",
+//                @"identifier": @"Content-1002",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
+//            @{
+//                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_problem.ZIP",
+//                @"destination": @"test/peace_problem.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:294093],
+//                @"checksum": @"d742448fd7c9a17e879441a29a4b32c4a928b9cf",
+//                @"identifier": @"Content-1003",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
+//            @{
+//                @"url": @"https://archive.org/download/BreakbeatSamplePack1-8zip/BreakPack5.zip",
+//                @"destination": @"test/BreakPack5.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:5366561],
+//                @"checksum": @"4b18f3bbe5d0b7b6aa6b44e11ecaf303d442a7e5",
+//                @"identifier": @"Content-1004",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
+//            @{
+//                @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
+//                @"destination": @"test/test100.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:104874307],
+//                @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
+//                @"identifier": @"Content-1005",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
+//            @{
+//                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_treatment.ZIP",
+//                @"destination": @"test/peace_treatment.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:523193],
+//                @"checksum": @"60180da39e4bf4d16bd453eb6f6c6d97082ac47a",
+//                @"identifier": @"Content-1006",
+//                @"progress": @0,
+//                @"completed": @NO
+//            }
         ];
     }
     return self;
@@ -105,7 +105,6 @@
     individualProgressViewsContainer.dataSource = self;
     individualProgressViewsContainer.delegate = self;
     [self.view addSubview:individualProgressViewsContainer];
-    [individualProgressViewsContainer reloadData];
     individualProgressViewsContainer.contentSize = CGSizeMake(screenWidth, [downloadTaskInfos count] * 65);
     [individualProgressViewsContainer setSeparatorInset:UIEdgeInsetsZero];
 }
@@ -128,27 +127,40 @@
     // [self setupLogView];
     self.navigationItem.title = @"Batch Download";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStylePlain target:self action:@selector(downloadManyFilesTest:)];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd target: self action: @selector(addNewDownloadTask)];
+    
     _objectiveCDM = [ObjectiveCDM sharedInstance];
     _objectiveCDM.uiDelegate = self;
     _objectiveCDM.dataDelegate = self;
     objectiveCDMDownloadingTasks = [_objectiveCDM addBatch:downloadTaskInfos];
-    
+    [individualProgressViewsContainer reloadData];
     // if you want to set total bytes and initial downloaded bytes
     // [_objectiveCDM setTotalBytes:232821382];
     // [_objectiveCDM setInitialDownloadedBytes:116410691];
 }
 
+- (void) addNewDownloadTask {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"New Download" message:@"Key in your URL:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    if(currentInputURL) {
+        [[alertView textFieldAtIndex:0] setText:currentInputURL];
+    }
+    [alertView show];
+}
+
+
 - (void) downloadManyFilesTest:(UIBarButtonItem *)startButton {
     UIApplication* app = [UIApplication sharedApplication];
     if([[startButton title] isEqualToString:@"Resume"]) {
         [_objectiveCDM continueInCompletedDownloads];
-        [startButton setTitle:@"Stop"];
+        [startButton setTitle:@"Pause"];
         app.networkActivityIndicatorVisible = YES;
     } else if([[startButton title] isEqualToString:@"Start"]) {
         [_objectiveCDM startDownloadingCurrentBatch];
-        [startButton setTitle:@"Stop"];
+        [startButton setTitle:@"Pause"];
         app.networkActivityIndicatorVisible = YES;
-    } else if([[startButton title] isEqualToString:@"Stop"]) {
+    } else if([[startButton title] isEqualToString:@"Stop"] || [[startButton title] isEqualToString:@"Pause"]) {
         [_objectiveCDM suspendAllOnGoingDownloads];
         [startButton setTitle:@"Resume"];
         app.networkActivityIndicatorVisible = NO;
@@ -159,6 +171,37 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (BOOL) isValidURL:(NSString *) candidate {
+    NSString *urlRegEx =
+    @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    return [urlTest evaluateWithObject:candidate];
+}
+
+#pragma UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 1) { // OK Button
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        NSString *url = [textField text];
+        if([self isValidURL:url]) {
+            NSArray *parts = [url componentsSeparatedByString:@"/"];
+            NSString *filename = [parts objectAtIndex:[parts count]-1];
+            [[ObjectiveCDM sharedInstance] addDownloadTask:@{@"url": url, @"destination": [NSString stringWithFormat:@"test/%@", filename]}];
+            objectiveCDMDownloadingTasks = [_objectiveCDM downloadingTasks];
+            [individualProgressViewsContainer reloadData];
+
+        }//end if
+        else {
+            currentInputURL = url;
+            [self addNewDownloadTask];
+        }
+    } else {
+        currentInputURL = nil;
+    }
+}
+
 
 # pragma ObjectiveCDMUIDelagate
 
@@ -207,7 +250,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [downloadTaskInfos count];
+    return [objectiveCDMDownloadingTasks count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
