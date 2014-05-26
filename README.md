@@ -176,7 +176,7 @@ git clone git@github.com:jameshuynh/ObjectiveCDM.git
 - `Cmd + R` to run the example project :-)
 
 <p align="left" >
-  <img src="https://raw.githubusercontent.com/jameshuynh/ObjectiveCDM/master/ObjectiveCDM-Example/screenshot.png" alt="Running Example" title="Running Example">
+  <img style='border:1px solid #ccc;' src="https://raw.githubusercontent.com/jameshuynh/ObjectiveCDM/master/ObjectiveCDM-Example/screenshot.png" alt="Running Example" title="Running Example">
 </p>
 
 ### Contribution
