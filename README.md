@@ -12,13 +12,13 @@ Choose ObjectiveCDM for your next project as your download manager!
 
 ```ruby
 platform :ios, '7.0'
-pod "ObjectiveCDM", "~> 1.0.0"
+pod "ObjectiveCDM", "~> 1.0.1"
 ```
 
 ### Features
 
 - Ability to download a batch of files.
-- Checksum (MD5, SHA1, SHA512) / File Size is verified once a file has been downloaded. Auto redownload file if checksum / file size is mismatched.
+- Checksum (MD5, SHA1, SHA512) / File Size is verified once a file has been downloaded. Auto redownload file if Checksum / File Size is mismatched.
 - Auto resume on internet connection recovery.
 - Overall Progress & individual download progress
 
