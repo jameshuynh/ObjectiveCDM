@@ -70,7 +70,6 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
 ...
 
 [objectiveCDM startDownloadingCurrentBatch];
-  
 ```
 
 - You can set initial downloaded bytes - this will help to calculate the overall progress if you have already have some downloaded files from last download
@@ -151,6 +150,20 @@ NSString *destination = downloadTaskInfo.destination; // destination is the full
 NSString *fileName = downloadTaskInfo.fileName;
 NSString *checksum = downloadTaskInfo.checksum;
 NSString *identifier = downloadTaskInfo.identifier;
+```
+
+### Additional Functionality
+
+- You can add a download task to current batch:
+
+```objective-c
+[[ObjectiveCDM sharedInstance] addDownloadTask:@{@"url": @"http://download.thinkbroadband.com/5MB.zip", @"destination": @"test/5MB.zip"}];
+```
+
+- You can get out the current list of downloading tasks
+
+```objective-c
+NSArray *currentDownloadTask = [[ObjectiveCDM sharedInstance] downloadingTasks];
 ```
 
 ### Running Example
