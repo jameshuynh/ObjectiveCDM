@@ -100,8 +100,9 @@
 - (void) setupIndividualProgressView {
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
     
-    individualProgressViewsContainer = [[UITableView alloc] initWithFrame:CGRectMake(0, 165, screenWidth, 300)];
+    individualProgressViewsContainer = [[UITableView alloc] initWithFrame:CGRectMake(0, 165, screenWidth, screenHeight - 165)];
     individualProgressViewsContainer.dataSource = self;
     individualProgressViewsContainer.delegate = self;
     [self.view addSubview:individualProgressViewsContainer];
