@@ -220,7 +220,7 @@ didCompleteWithError:(NSError *)error {
 
 // Checks if we have an internet connection or not
 - (void) listenToInternetConnectionChange {
-    internetReachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+    internetReachability = [Reachability reachabilityWithHostname:@"www.google.com"];
     
     // Internet is reachable
     __weak ObjectiveCDM* _weakSelf = self;

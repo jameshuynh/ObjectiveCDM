@@ -1,0 +1,13 @@
+PODS:
+  - FileMD5Hash (2.0.0)
+  - Reachability (3.1.1)
+
+DEPENDENCIES:
+  - FileMD5Hash (~> 2.0.0)
+  - Reachability (~> 3.1.1)
+
+SPEC CHECKSUMS:
+  FileMD5Hash: 297c3ee6e7b800a198b6c372b6b7641cab5cf12c
+  Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
+
+COCOAPODS: 0.33.1
