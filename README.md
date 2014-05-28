@@ -185,6 +185,8 @@ Contribution, Suggestion and Issues are very much appreciated :). Please also fo
 
 ### Roadmap to version 2.0
 
+- Transfer Rate (KB/s, MB/s)
+- Elapsed Downloading Time
 - Auto Test Coverage
 - Split download (i.e. download 1 file using many threads) to speed up download
 
