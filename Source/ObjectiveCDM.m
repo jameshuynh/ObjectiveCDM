@@ -19,7 +19,7 @@
         [sharedManager setTotalBytes:0];
         ((ObjectiveCDM *)sharedManager).fileHashAlgorithm = FileHashAlgorithmSHA1;
         [sharedManager listenToInternetConnectionChange];
-        [sharedManager setNumberOfConcurrentThreads:4];
+        [sharedManager setNumberOfConcurrentThreads:3];
     });
     return sharedManager;
 }
@@ -219,7 +219,7 @@ didCompleteWithError:(NSError *)error {
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
     float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
-    NSLog(@"part number %@", [downloadTask.taskDescription stringByReplacingOccurrencesOfString:@"Part-" withString:@""]);
+    // NSLog(@"part number %@", [downloadTask.taskDescription stringByReplacingOccurrencesOfString:@"Part-" withString:@""]);
     int partNumber = [[downloadTask.taskDescription stringByReplacingOccurrencesOfString:@"Part-" withString:@""] intValue];
     ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten inPart:partNumber];
     if(downloadTaskInfo) {

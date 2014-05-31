@@ -155,7 +155,7 @@
         NSString *range = @"bytes=";
         range = [range stringByAppendingString:[[NSNumber numberWithLongLong:(downloadTaskInfo.totalBytesExpectedToWrite / [sessions count]) * counter] stringValue]];
         range = [range stringByAppendingString:@"-"];
-        if(counter != [sessions count]) {
+        if(counter != [sessions count] - 1) {
             range = [range stringByAppendingString:[NSString stringWithFormat:@"%lld", (perSessionBytesCount * (counter + 1)) - 1]];
         }//end if
         [request setValue:range forHTTPHeaderField:@"Range"];

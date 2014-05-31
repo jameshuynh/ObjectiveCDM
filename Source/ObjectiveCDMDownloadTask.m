@@ -120,7 +120,8 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     
     int64_t total = 0;
     
-    for(NSNumber *bytesWritten in [self totalBytesWrittenArray] ) {
+    NSArray *bytesWrittenArrayCopy = [[self totalBytesWrittenArray] copy];
+    for(NSNumber *bytesWritten in bytesWrittenArrayCopy ) {
         total += [bytesWritten longLongValue];
     }
     // NSLog(@"totalBytesWrittenArray %@", self.totalBytesWrittenArray);
@@ -242,7 +243,7 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
         [fileManager removeItemAtPath:self.destination error:&removeFileError];
     }//end if
     for(int index = 0; index < numberOfConnections; index++) {
-        NSString *partDestination = [NSString stringWithFormat:@"%@.part-%d", self.destination, index];
+        NSString *partDestination = [NSString stringWithFormat:@"%@.part%d", self.destination, index];
         if([fileManager fileExistsAtPath:partDestination]) {
             [fileManager removeItemAtPath:partDestination error:&removeFileError];
         }//end if
