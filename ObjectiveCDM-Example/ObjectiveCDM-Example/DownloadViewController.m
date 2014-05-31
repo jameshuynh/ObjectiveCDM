@@ -21,40 +21,40 @@
         // Custom initialization
         downloadLogs = [[NSMutableArray alloc] initWithArray:@[]];
         downloadTaskInfos = @[
-            @{
-                @"url": @"http://87.76.16.10/test10.zip",
-                @"destination": @"test/test10.zip",
-                @"fileSize": [NSNumber numberWithLongLong:11536384],
-                @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
-                @"identifier": @"Content-1001"
-            }
-            , @{
-                @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
-                @"destination": @"test/peace.zip",
-                @"fileSize": [NSNumber numberWithLongLong:627874],
-                @"checksum": @"0c0fe2686a45b3607dbb47690eadb89065341e95",
-                @"identifier": @"Content-1002",
-                @"progress": @0,
-                @"completed": @NO
-            },
-            @{
-                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_problem.ZIP",
-                @"destination": @"test/peace_problem.zip",
-                @"fileSize": [NSNumber numberWithLongLong:294093],
-                @"checksum": @"d742448fd7c9a17e879441a29a4b32c4a928b9cf",
-                @"identifier": @"Content-1003",
-                @"progress": @0,
-                @"completed": @NO
-            },
-            @{
-                @"url": @"https://archive.org/download/BreakbeatSamplePack1-8zip/BreakPack5.zip",
-                @"destination": @"test/BreakPack5.zip",
-                @"fileSize": [NSNumber numberWithLongLong:5366561],
-                @"checksum": @"4b18f3bbe5d0b7b6aa6b44e11ecaf303d442a7e5",
-                @"identifier": @"Content-1004",
-                @"progress": @0,
-                @"completed": @NO
-            },
+//            @{
+//                @"url": @"http://87.76.16.10/test10.zip",
+//                @"destination": @"test/test10.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:11536384],
+//                @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
+//                @"identifier": @"Content-1001"
+//            }
+//            , @{
+//                @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
+//                @"destination": @"test/peace.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:627874],
+//                @"checksum": @"0c0fe2686a45b3607dbb47690eadb89065341e95",
+//                @"identifier": @"Content-1002",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
+//            @{
+//                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_problem.ZIP",
+//                @"destination": @"test/peace_problem.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:294093],
+//                @"checksum": @"d742448fd7c9a17e879441a29a4b32c4a928b9cf",
+//                @"identifier": @"Content-1003",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
+//            @{
+//                @"url": @"https://archive.org/download/BreakbeatSamplePack1-8zip/BreakPack5.zip",
+//                @"destination": @"test/BreakPack5.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:5366561],
+//                @"checksum": @"4b18f3bbe5d0b7b6aa6b44e11ecaf303d442a7e5",
+//                @"identifier": @"Content-1004",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
             @{
                 @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
                 @"destination": @"test/test100.zip",
@@ -64,15 +64,15 @@
                 @"progress": @0,
                 @"completed": @NO
             },
-            @{
-                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_treatment.ZIP",
-                @"destination": @"test/peace_treatment.zip",
-                @"fileSize": [NSNumber numberWithLongLong:523193],
-                @"checksum": @"60180da39e4bf4d16bd453eb6f6c6d97082ac47a",
-                @"identifier": @"Content-1006",
-                @"progress": @0,
-                @"completed": @NO
-            }
+//            @{
+//                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_treatment.ZIP",
+//                @"destination": @"test/peace_treatment.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:523193],
+//                @"checksum": @"60180da39e4bf4d16bd453eb6f6c6d97082ac47a",
+//                @"identifier": @"Content-1006",
+//                @"progress": @0,
+//                @"completed": @NO
+//            }
         ];
     }
     return self;

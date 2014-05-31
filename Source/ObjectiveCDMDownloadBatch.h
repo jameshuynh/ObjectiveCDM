@@ -17,6 +17,14 @@ enum {
 
 typedef NSInteger FileHashAlgorithm;
 
+enum {
+    ObjectiveCDMDownloadTaskPartialCompleted = 0,
+    ObjectiveCDMDownloadTaskCompleted = 1,
+    ObjectiveCDMDownloadTaskFailed = -1,
+};
+
+typedef NSInteger ObjectiveCDMDownloadTaskStatus;
+
 @class ObjectiveCDMDownloadTask;
 
 #import "ObjectiveCDM.h"
@@ -25,22 +33,22 @@ typedef NSInteger FileHashAlgorithm;
 @interface ObjectiveCDMDownloadBatch : NSObject {
     NSMutableArray *downloadInputs;
     NSMutableArray *urls;
-    NSURLSession *session;
+    NSArray *sessions;
     FileHashAlgorithm fileHashAlgorithm;
 }
 
 @property(nonatomic, assign) BOOL completed;
 
 - (instancetype) initWithFileHashAlgorithm:(FileHashAlgorithm)fileHashAlgorithmInput;
-- (ObjectiveCDMDownloadTask *) addTask:(NSDictionary *)taskInfo;
-- (BOOL) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL;
+- (ObjectiveCDMDownloadTask *) addTask:(NSDictionary *)taskInfo withNumberOfConcurrentThreads:(int)threadsNumber;
+- (ObjectiveCDMDownloadTaskStatus) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL forPart:(int)partNumber;
 - (NSArray *)downloadObjects;
-- (void) setDownloadingSessionTo:(NSURLSession *)inputSession;
+- (void) setDownloadingSessionsTo:(NSArray *)inputSessions;
 - (ObjectiveCDMDownloadTask *)downloadInfoOfTaskUrl:(NSString *)url;
 
 - (void) updateCompleteStatus;
-- (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten;
-- (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask;
+- (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten inPart:(int)partNumber;
+- (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask inPart:(int)partNumber;
 - (NSDictionary *) totalBytesWrittenAndReceived;
 - (void) startDownloadTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo;
 - (void) continueAllInCompletedDownloadTask;

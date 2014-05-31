@@ -12,11 +12,13 @@
 
 @interface ObjectiveCDMDownloadTask : NSObject {
     FileHashAlgorithm fileHashAlgorithm;
+    int numberOfConnections;
 }
 
 @property(nonatomic, assign) float cachedProgress;
 @property(nonatomic, assign) BOOL completed;
-@property(nonatomic, assign) int64_t totalBytesWritten;
+@property(nonatomic, assign) BOOL isDownloading;
+@property(nonatomic, retain) NSMutableArray* totalBytesWrittenArray;
 @property(nonatomic, assign) int64_t totalBytesExpectedToWrite;
 
 @property(nonatomic, assign) NSUInteger position;
@@ -32,19 +34,24 @@
                  withDestination:(NSString *)destination
                  andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWrite
                  andChecksum:(NSString *)checksum
-                 andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
+                 andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput
+                 andNumberOfConnections:(int)numberOfConnectionsInput;
 
 - (instancetype) initWithURL:(NSURL *)url
                  withDestination:(NSString *)destination
                  andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWrite
                  andChecksum:(NSString *)checksum
-                 andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
+                 andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput
+                 andNumberOfConnections:(int)numberOfConnectionsInput;
 
 - (void) cleanUp;
 - (float) downloadingProgress;
-- (BOOL) verifyDownload;
+- (BOOL) mergeAndVerifyDownload;
+- (BOOL) checkDownloadCompleted;
 - (NSString *) fullErrorDescription;
 - (BOOL) isHittingErrorBecauseOffline;
 - (BOOL) isHittingErrorConnectingToServer;
+- (int64_t) totalBytesWritten;
+- (void)setBytesWrittenForDownloadPart:(int)partNumber withNumberOfBytes:(int64_t)bytesWritten;
 
 @end

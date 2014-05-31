@@ -20,7 +20,7 @@
     return self;
 }
 
-- (ObjectiveCDMDownloadTask *) addTask:(NSDictionary *)taskInfo {
+- (ObjectiveCDMDownloadTask *) addTask:(NSDictionary *)taskInfo withNumberOfConcurrentThreads:(int)threadsNumber {
     NSString *urlString = nil;
     BOOL isURLString = YES;
     if([taskInfo[@"url"] isKindOfClass:[NSURL class]]) {
@@ -44,14 +44,16 @@
                                   withDestination:destination
                     andTotalBytesExepectedToWrite:totalExpectedToWrite
                                       andChecksum:taskInfo[@"checksum"]
-                              andFileHashAlgorithm:fileHashAlgorithm];
+                             andFileHashAlgorithm:fileHashAlgorithm
+                            andNumberOfConnections:threadsNumber];
         } else {
             downloadTask = [[ObjectiveCDMDownloadTask alloc]
                             initWithURLString:taskInfo[@"url"]
                               withDestination:destination
                 andTotalBytesExepectedToWrite:totalExpectedToWrite
                                   andChecksum:taskInfo[@"checksum"]
-                         andFileHashAlgorithm:fileHashAlgorithm];
+                         andFileHashAlgorithm:fileHashAlgorithm
+                       andNumberOfConnections:threadsNumber];
 ;
         }//end else
         if(taskInfo[@"identifier"]) {
@@ -71,33 +73,39 @@
     return [urls indexOfObject:urlString] != NSNotFound;
 }
 
-- (BOOL) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL {
+- (ObjectiveCDMDownloadTaskStatus) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL forPart:(int)partNumber {
     NSError *movingFileError;
     ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:downloadURL];
-    NSString *destinationPath = downloadTaskInfo.destination;
+    NSString *destinationPath = [NSString stringWithFormat:@"%@.part%d", downloadTaskInfo.destination, partNumber];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-
     [fileManager moveItemAtPath:downloadedFileLocation.path toPath:destinationPath error:&movingFileError];
     
     if(movingFileError) {
         NSLog(@"Error: %@", movingFileError.localizedDescription);
         return NO;
     } else {
-        BOOL isVerified = [downloadTaskInfo verifyDownload];
-        if(isVerified) {
-            [self updateCompleteStatus];
+        if([downloadTaskInfo checkDownloadCompleted]) {
+            if([downloadTaskInfo mergeAndVerifyDownload]) {
+                [self updateCompleteStatus];
+                return ObjectiveCDMDownloadTaskCompleted;
+            } else {
+                return ObjectiveCDMDownloadTaskFailed;
+            }
         }//end if
-        return isVerified;
+        else {
+            return ObjectiveCDMDownloadTaskPartialCompleted;
+        }//end else
+        // finish all the parts
     }//end else
 }
 
-- (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask {
+- (ObjectiveCDMDownloadTask *) captureDownloadingInfoOfDownloadTask:(NSURLSessionDownloadTask *)downloadTask inPart:(int)partNumber {
     // task is already inside the session - do nothing
     NSURL *url = downloadTask.originalRequest.URL;
     ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:url.absoluteString];
     if(downloadTaskInfo) {
-        downloadTaskInfo.totalBytesWritten = downloadTask.countOfBytesReceived;
-
+        [downloadTaskInfo setBytesWrittenForDownloadPart:partNumber withNumberOfBytes:downloadTask.countOfBytesReceived];
+        
         if(downloadTaskInfo.totalBytesExpectedToWrite == 0) {
             downloadTaskInfo.totalBytesExpectedToWrite = downloadTask.countOfBytesExpectedToReceive;
         }//end if
@@ -105,10 +113,10 @@
     return downloadTaskInfo;
 }
 
-- (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten {
+- (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten inPart:(int)partNumber {
     ObjectiveCDMDownloadTask *downloadTask = [self downloadInfoOfTaskUrl:url];
     if(downloadTask) {
-        downloadTask.totalBytesWritten = totalBytesWritten;
+        [downloadTask setBytesWrittenForDownloadPart:partNumber withNumberOfBytes:totalBytesWritten];
     }//end if
     
     return downloadTask;
@@ -141,14 +149,30 @@
 
 - (void) downloadRequest:(NSMutableURLRequest *)request ofTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
     [request setTimeoutInterval:90.0];
-    if(downloadTaskInfo.error) {
-        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithResumeData:downloadTaskInfo.error.userInfo[NSURLSessionDownloadTaskResumeData]];
-        [downloadTask resume];
-        downloadTaskInfo.error = nil;
-    } else {
-        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
-        [downloadTask resume];
-    }//end else
+    int counter = 0;
+    int64_t perSessionBytesCount = downloadTaskInfo.totalBytesExpectedToWrite / [sessions count];
+    for(NSURLSession *session in sessions) {
+        NSString *range = @"bytes=";
+        range = [range stringByAppendingString:[[NSNumber numberWithLongLong:(downloadTaskInfo.totalBytesExpectedToWrite / [sessions count]) * counter] stringValue]];
+        range = [range stringByAppendingString:@"-"];
+        if(counter != [sessions count]) {
+            range = [range stringByAppendingString:[NSString stringWithFormat:@"%lld", (perSessionBytesCount * (counter + 1)) - 1]];
+        }//end if
+        [request setValue:range forHTTPHeaderField:@"Range"];
+        
+        if(downloadTaskInfo.error) {
+            NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithResumeData:downloadTaskInfo.error.userInfo[NSURLSessionDownloadTaskResumeData]];
+            downloadTask.taskDescription = [NSString stringWithFormat:@"Part-%d", counter];
+            [downloadTask resume];
+            
+            downloadTaskInfo.error = nil;
+        } else {
+            NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
+            downloadTask.taskDescription = [NSString stringWithFormat:@"Part-%d", counter];
+            [downloadTask resume];
+        }//end else
+        counter++;
+    }//end for
     
 }
 
@@ -189,8 +213,8 @@
     self.completed = YES;
 }
 
-- (void) setDownloadingSessionTo:(NSURLSession *)inputSession {
-    session = inputSession;
+- (void) setDownloadingSessionsTo:(NSArray *)inputSession {
+    sessions = inputSession;
 }
 
 - (void) continueAllInCompletedDownloadTask {
@@ -202,35 +226,38 @@
 }
 
 - (void) resumeAllSuspendedTasks {
-    
-    [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
-            NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
-            if([self downloadInfoOfTaskUrl:urlString]) {
-                if(downloadTask.state == NSURLSessionTaskStateSuspended) {
-                    [downloadTask resume];
+    for(NSURLSession *session in sessions) {
+        [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+            for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+                NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
+                if([self downloadInfoOfTaskUrl:urlString]) {
+                    if(downloadTask.state == NSURLSessionTaskStateSuspended) {
+                        [downloadTask resume];
+                    }//end if
                 }//end if
-            }//end if
-        }//end for
-    }];
+            }//end for
+        }];
+    }//end for
 
 }
 
 - (void) suspendAllOnGoingDownloadTask {
-    [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
-            NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
-            if([self downloadInfoOfTaskUrl:urlString]) {
-                if(downloadTask.state == NSURLSessionTaskStateRunning) {
-                    [downloadTask suspend];
+    for(NSURLSession *session in sessions) {
+        [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+            for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
+                NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
+                if([self downloadInfoOfTaskUrl:urlString]) {
+                    if(downloadTask.state == NSURLSessionTaskStateRunning) {
+                        [downloadTask suspend];
+                    }//end if
                 }//end if
-            }//end if
-        }//end for
-    }];
+            }//end for
+        }];
+    }//end for
 }
 
 - (BOOL) isDownloading {
-    return !!session;
+    return !!sessions;
 }
 
 @end

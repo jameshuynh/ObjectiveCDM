@@ -30,12 +30,12 @@
 - (NSArray *) addBatch:(NSArray *)arrayOfDownloadInformation;
 - (NSArray *) downloadingTasks;
 - (void) startDownloadingCurrentBatch;
-- (void) startADownloadBatch:(ObjectiveCDMDownloadBatch *)batch;
 - (ObjectiveCDMDownloadTask *) addDownloadTask:(NSDictionary *)dictionary;
 - (void) cancelAllOutStandingTasks;
 - (void) continueInCompletedDownloads;
 - (void) suspendAllOnGoingDownloads;
 
+@property(nonatomic, assign) int numberOfConcurrentThreads;
 @property(nonatomic, assign) FileHashAlgorithm fileHashAlgorithm;
 @property(nonatomic, retain) id<ObjectiveCDMUIDelegate> uiDelegate;
 @property(nonatomic, retain) id<ObjectiveCDMDataDelegate> dataDelegate;
