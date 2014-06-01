@@ -2,3 +2,8 @@ platform :ios, '7.0'
 
 pod 'FileMD5Hash', '~> 2.0.0'
 pod 'Reachability', '~> 3.1.1'
+
+target 'ObjectiveCDM-ExampleTests', :exclusive => true do
+    pod 'FileMD5Hash', '~> 2.0.0'
+    pod 'Reachability', '~> 3.1.1'
+end

@@ -23,6 +23,12 @@ enum {
     ObjectiveCDMDownloadTaskFailed = -1,
 };
 
+enum {
+    kUnitStringBinaryUnits     = 1 << 0,
+    kUnitStringOSNativeUnits   = 1 << 1,
+    kUnitStringLocalizedFormat = 1 << 2
+};
+
 typedef NSInteger ObjectiveCDMDownloadTaskStatus;
 
 @class ObjectiveCDMDownloadTask;
@@ -35,6 +41,8 @@ typedef NSInteger ObjectiveCDMDownloadTaskStatus;
     NSMutableArray *urls;
     NSArray *sessions;
     FileHashAlgorithm fileHashAlgorithm;
+    int64_t numberOfBytesDownloadedSinceStart;
+    NSDate *startTime;
 }
 
 @property(nonatomic, assign) BOOL completed;
@@ -56,4 +64,6 @@ typedef NSInteger ObjectiveCDMDownloadTaskStatus;
 - (void) resumeAllSuspendedTasks;
 - (BOOL) isDownloading;
 
+- (NSString *) downloadRate;
+- (double) elapsedSeconds;
 @end

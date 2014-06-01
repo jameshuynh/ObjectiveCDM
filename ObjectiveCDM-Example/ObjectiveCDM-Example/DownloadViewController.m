@@ -83,10 +83,17 @@
     CGFloat screenWidth = screenRect.size.width;
     
     overallProgressLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, screenWidth, 40)];
+    overallRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 130, screenWidth, 20)];
     [overallProgressLabel setTextAlignment:NSTextAlignmentCenter];
     [overallProgressLabel setText:@"0.00%"];
     [overallProgressLabel setTextColor:[UIColor blackColor]];
     [overallProgressLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    
+    [overallRateLabel setTextAlignment:NSTextAlignmentCenter];
+    [overallRateLabel setText:@"0 KB/s"];
+    [overallRateLabel setTextColor:[UIColor blackColor]];
+    [overallRateLabel setFont:[UIFont boldSystemFontOfSize:12]];
+    
     overallProgressBar = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     overallProgressBar.frame = CGRectMake(80, 120, screenWidth - 160, 30);
     overallProgressBar.progress = 0;
@@ -94,6 +101,7 @@
     
     [self.view addSubview:overallProgressLabel];
     [self.view addSubview:overallProgressBar];
+    [self.view addSubview:overallRateLabel];
     
 }
 
@@ -160,12 +168,17 @@
     } else if([[startButton title] isEqualToString:@"Start"]) {
         [_objectiveCDM startDownloadingCurrentBatch];
         [startButton setTitle:@"Pause"];
+        downloadRateTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateOverallRate) userInfo:nil repeats:YES];
         app.networkActivityIndicatorVisible = YES;
     } else if([[startButton title] isEqualToString:@"Stop"] || [[startButton title] isEqualToString:@"Pause"]) {
         [_objectiveCDM suspendAllOnGoingDownloads];
         [startButton setTitle:@"Resume"];
         app.networkActivityIndicatorVisible = NO;
     }
+}
+
+- (void) updateOverallRate {
+    [overallRateLabel setText:[_objectiveCDM downloadRate]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -215,6 +228,7 @@
 
 - (void) didFinishAll {
     [overallProgressLabel setText:@"COMPLETED!"];
+    [downloadRateTimer invalidate];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 

@@ -85,6 +85,10 @@
     }
 }
 
+- (NSString *) downloadRate {
+    return [currentBatch downloadRate];
+}
+
 - (void) downloadBatch:(NSArray *)arrayOfDownloadInformation {
     [self addBatch:arrayOfDownloadInformation];
     [self startDownloadingCurrentBatch];

@@ -16,6 +16,8 @@
         downloadInputs = [[NSMutableArray alloc] initWithArray:@[]];
         urls = [[NSMutableArray alloc] initWithArray:@[]];
         fileHashAlgorithm = fileHashAlgorithmInput;
+        startTime = [NSDate date];
+        numberOfBytesDownloadedSinceStart = 0;
     }//end if
     return self;
 }
@@ -116,6 +118,7 @@
 - (ObjectiveCDMDownloadTask *) updateProgressOfDownloadURL:(NSString *)url withProgress:(float)percentage withTotalBytesWritten:(int64_t)totalBytesWritten inPart:(int)partNumber {
     ObjectiveCDMDownloadTask *downloadTask = [self downloadInfoOfTaskUrl:url];
     if(downloadTask) {
+        numberOfBytesDownloadedSinceStart += totalBytesWritten - [downloadTask.totalBytesWrittenArray[partNumber] longLongValue];
         [downloadTask setBytesWrittenForDownloadPart:partNumber withNumberOfBytes:totalBytesWritten];
     }//end if
     
@@ -248,6 +251,17 @@
             }//end for
         }];
     }//end for
+}
+
+- (double) elapsedSeconds {
+    NSDate *now = [NSDate date];
+    NSTimeInterval distanceBetweenDates = [now timeIntervalSinceDate:startTime];
+    return distanceBetweenDates;
+}
+
+- (NSString *) downloadRate {
+    int64_t rate = numberOfBytesDownloadedSinceStart / [self elapsedSeconds];
+    return [NSString stringWithFormat:@"%@/s", [NSByteCountFormatter stringFromByteCount:rate countStyle:NSByteCountFormatterCountStyleFile]];
 }
 
 - (BOOL) isDownloading {
