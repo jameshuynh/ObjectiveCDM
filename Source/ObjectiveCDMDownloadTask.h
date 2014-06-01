@@ -18,9 +18,9 @@
 @property(nonatomic, assign) float cachedProgress;
 @property(nonatomic, assign) BOOL completed;
 @property(nonatomic, assign) BOOL isDownloading;
-@property(nonatomic, retain) NSMutableArray* totalBytesWrittenArray;
 @property(nonatomic, assign) int64_t totalBytesExpectedToWrite;
 
+@property(nonatomic, retain) NSMutableArray* totalBytesWrittenArray;
 @property(nonatomic, assign) NSUInteger position;
 @property(nonatomic, retain) NSURL* url;
 @property(nonatomic, retain) NSString* urlString;
@@ -53,5 +53,7 @@
 - (BOOL) isHittingErrorConnectingToServer;
 - (int64_t) totalBytesWritten;
 - (void)setBytesWrittenForDownloadPart:(int)partNumber withNumberOfBytes:(int64_t)bytesWritten;
-
+- (NSString *) rangeOfPart:(int) partNumber;
+- (BOOL) alreadyDownloadedPart:(int)partNumber;
+- (int64_t) captureTotalBytesDownloadedInFileParts;
 @end

@@ -42,7 +42,6 @@
     [fileNameLabel setText:downloadTaskInfo.fileName];
     individualProgress.progress = downloadTaskInfo.cachedProgress;
     NSString *status = @"";
-    // NSLog(@"download task info %@", downloadTaskInfo);
     if(downloadTaskInfo.completed == YES) {
         status = @"(Completed)";
     }//end if

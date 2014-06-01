@@ -58,7 +58,7 @@
         NSMutableArray *mutableArrayOfSessions = [[NSMutableArray alloc] initWithArray:@[]];
         for(int index = 0; index < self.numberOfConcurrentThreads; index++) {
             NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:[NSString stringWithFormat:@"%@%d", @"com.ObjectiveCDM.NSURLSession", index]];
-            config.HTTPMaximumConnectionsPerHost = 4;
+            config.HTTPMaximumConnectionsPerHost = 3;
             NSURLSession *backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
             [mutableArrayOfSessions addObject:backgroundSession];
         }//end for
@@ -132,8 +132,12 @@
     [currentBatch suspendAllOnGoingDownloadTask];
 }
 
-- (void) captureInformationFromDownloadingTask {
-    for(NSURLSession *session in [self sessions]) {
+- (void) captureInformationFromDownloadingTaskWithSessionIndex:(NSInteger)sessionIndex andCallback:(void (^)(void))completionBlock {
+    if(sessionIndex == [[self sessions] count]) {
+        completionBlock();
+    }//end if
+    else {
+        NSURLSession *session = [self sessions][sessionIndex];
         [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
             for(ObjectiveCDMDownloadTask *downloadTaskInfo in currentBatch.downloadObjects) {
                 downloadTaskInfo.isDownloading = NO;
@@ -147,9 +151,9 @@
                     }
                 }//end for
             }//end for
-            
+            [self captureInformationFromDownloadingTaskWithSessionIndex:sessionIndex + 1 andCallback:completionBlock];
         }];
-    }//end for
+    }//end else
 }
 
 - (void) startDownloadingCurrentBatch {
@@ -159,25 +163,26 @@
     }//end if
     
     [currentBatch setDownloadingSessionsTo:[self sessions]];
-    [self captureInformationFromDownloadingTask];
-    for(ObjectiveCDMDownloadTask *downloadTaskInfo in currentBatch.downloadObjects) {
-        if(downloadTaskInfo.completed == YES) {
-            [self processCompletedDownload:downloadTaskInfo];
-            [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
-        } else if(downloadTaskInfo.isDownloading == NO) {
-            [currentBatch startDownloadTask:downloadTaskInfo];
+    [self captureInformationFromDownloadingTaskWithSessionIndex:0 andCallback:^{
+        for(ObjectiveCDMDownloadTask *downloadTaskInfo in currentBatch.downloadObjects) {
+            [downloadTaskInfo captureTotalBytesDownloadedInFileParts];
+            if(downloadTaskInfo.completed == YES) {
+                [self processCompletedDownload:downloadTaskInfo];
+                [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
+            } else if(downloadTaskInfo.isDownloading == NO) {
+                [currentBatch startDownloadTask:downloadTaskInfo];
+            }//end if
+        }
+        [currentBatch updateCompleteStatus];
+        if(self.uiDelegate) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+                [self.uiDelegate didReachProgress:[self overallProgress]];
+            }];
         }//end if
-    }
-    [currentBatch updateCompleteStatus];
-    if(self.uiDelegate) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-            [self.uiDelegate didReachProgress:[self overallProgress]];
-        }];
-    }//end if
-    if(currentBatch.completed && self.uiDelegate) {
-        [self postCompleteAll];
-    }//end if
-
+        if(currentBatch.completed && self.uiDelegate) {
+            [self postCompleteAll];
+        }//end if
+    }];
 }
 
 - (void) postProgressToUIDelegate {
@@ -217,9 +222,9 @@ didCompleteWithError:(NSError *)error {
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+
     NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
     float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
-    // NSLog(@"part number %@", [downloadTask.taskDescription stringByReplacingOccurrencesOfString:@"Part-" withString:@""]);
     int partNumber = [[downloadTask.taskDescription stringByReplacingOccurrencesOfString:@"Part-" withString:@""] intValue];
     ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten inPart:partNumber];
     if(downloadTaskInfo) {

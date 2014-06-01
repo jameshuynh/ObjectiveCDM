@@ -55,4 +55,5 @@ typedef NSInteger ObjectiveCDMDownloadTaskStatus;
 - (void) suspendAllOnGoingDownloadTask;
 - (void) resumeAllSuspendedTasks;
 - (BOOL) isDownloading;
+
 @end

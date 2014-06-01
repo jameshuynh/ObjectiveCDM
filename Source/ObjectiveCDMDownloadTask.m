@@ -88,12 +88,32 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     self.isDownloading = NO;
     fileHashAlgorithm = algorithm;
     numberOfConnections = numberOfConnectionsInput;
-    // [self resetBytesWrittenArray];
     
     NSString *documentDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     self.destination = [NSString stringWithFormat:@"%@/%@", documentDirectory, destination];
     self.fileName = [self.destination lastPathComponent];
-    [self prepareFolderForDestination];
+    [self prepare];
+}
+
+- (void) prepare {
+    if([self verifyMergedFile]) {
+        self.cachedProgress = 1;
+    } else {
+        int64_t totalVerifiedDownloadedBytes = [self captureTotalBytesDownloadedInFileParts];
+        if(totalVerifiedDownloadedBytes == self.totalBytesExpectedToWrite) {
+            // has downloaded all parts
+            BOOL result = [self mergeAndVerifyDownload];
+            if(result) {
+                self.cachedProgress = 1;
+            } else {
+                [self prepareDestinationFolderAndCleanUp];
+            }//end else
+        } else if(totalVerifiedDownloadedBytes > 0) {
+            self.cachedProgress = totalVerifiedDownloadedBytes * 1.0 / self.totalBytesExpectedToWrite;
+        } else {
+            [self prepareDestinationFolderAndCleanUp];
+        }//end else
+    }//end else
 }
 
 - (void) resetBytesWrittenArray {
@@ -120,17 +140,17 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     
     int64_t total = 0;
     
-    NSArray *bytesWrittenArrayCopy = [[self totalBytesWrittenArray] copy];
-    for(NSNumber *bytesWritten in bytesWrittenArrayCopy ) {
-        total += [bytesWritten longLongValue];
+    NSArray *bytesWrittenArrayCopy;
+    @synchronized(self.totalBytesWrittenArray) {
+        bytesWrittenArrayCopy = [[self totalBytesWrittenArray] copy];
+        for(NSNumber *bytesWritten in bytesWrittenArrayCopy ) {
+            total += [bytesWritten longLongValue];
+        }//end for
+        return total;
     }
-    // NSLog(@"totalBytesWrittenArray %@", self.totalBytesWrittenArray);
-    // NSLog(@"total for %@ = %lld", self.urlString, total);
-    
-    return total;
 }
 
-- (void) prepareFolderForDestination {
+- (void) prepareDestinationFolderAndCleanUp {
     NSString *containerFolderPath = [self.destination stringByDeletingLastPathComponent];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![[NSFileManager defaultManager] fileExistsAtPath:containerFolderPath]){
@@ -140,44 +160,9 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
         if(createDirectoryError) {
             NSLog(@"Create Directory Error: %@", [createDirectoryError localizedDescription]);
         }//end if
-
     }//end if
-    
-    if([fileManager fileExistsAtPath:self.destination] == YES) {
-        // file exist at destination -> verify if this file has been downloaded before
-        if([self mergeAndVerifyDownload]) {
-            self.cachedProgress = 1;
-            // retain file - this task has been completed
-        } else {
-            [self cleanUp];
-        }//end else
-    } else {
-        [self cleanUp];
-    }//end else
-}
+    [self cleanUp];
 
-- (void) mergeDownloadedParts {
-    
-    char **filesPath = (char **) malloc(sizeof(char*) * (numberOfConnections + 1));
-    int index = 0;
-    for(index = 0; index < numberOfConnections; index++) {
-        
-        NSString *s = [NSString stringWithFormat:@"%@.part%d", self.destination, index];
-        const char *cstr = [s cStringUsingEncoding:NSUTF8StringEncoding];//get cstring
-        int len = strlen(cstr);//get its length
-        char *cStringCopy = (char *) malloc(sizeof(char) * (len + 1));//allocate memory, + 1 for ending '\0'
-        strcpy(cStringCopy, cstr);//make a copy
-        filesPath[index] = cStringCopy;//put the point in cargs
-    }//end for
-    filesPath[index] = NULL;
-    char *resultFilePath = (char *)[self.destination UTF8String];
-    
-    concatenateFiles(filesPath, resultFilePath, numberOfConnections);
-    for(index = 0; index < numberOfConnections; index++) {
-        free(filesPath[index]);
-    }//end for
-    free(filesPath);
-    [self removeFileParts];
 }
 
 - (void) removeFileParts {
@@ -193,6 +178,38 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (BOOL) mergeAndVerifyDownload {
     [self mergeDownloadedParts];
+    return [self verifyMergedFile];
+}
+
+/*
+ * If any file part that does not have the supposed file size of that part
+ * this function will return 0 so the whole parts can be purged out
+ */
+- (int64_t) captureTotalBytesDownloadedInFileParts {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    int totalVerifiedBytes = 0;
+    [self resetBytesWrittenArray];
+    for(int index = 0; index < numberOfConnections; index++) {
+        NSString *partDestination = [self destinationOfPart:index];
+        if([fileManager fileExistsAtPath:partDestination]) {
+            int64_t supposedFileSizeOfPart = [self supposedFileSizeOfPart:index];
+            int64_t actualFileSizeOfFileAtPart = [self fileSizeOfFileAtPath:partDestination];
+            
+            // invalid file part -> return 0 immediately
+            if(supposedFileSizeOfPart != actualFileSizeOfFileAtPart) {
+                return 0;
+            } else {
+                totalVerifiedBytes += supposedFileSizeOfPart;
+                @synchronized(self.totalBytesWrittenArray) {
+                    self.totalBytesWrittenArray[index] = [NSNumber numberWithLongLong:supposedFileSizeOfPart];
+                }
+            }//end else
+        }//end if
+    }//end for
+    return totalVerifiedBytes;
+}
+
+- (BOOL) verifyMergedFile {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     // file does not exist as expected location
@@ -205,12 +222,9 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
         NSString *calculatedChecksum = [self retrieveChecksumOfDownloadedFile];
         isVerified = [calculatedChecksum isEqualToString:self.checkSum];
     } else { // check for file size
-        NSError *attributesError;
-        NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:self.destination error:&attributesError];
-        NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-        int64_t fileSize = [fileSizeNumber longLongValue];
-        isVerified = (fileSize == self.totalBytesExpectedToWrite);
-    }
+        isVerified = ([self fileSizeOfFileAtPath:self.destination] == self.totalBytesExpectedToWrite);
+    }//end else
+    
     if(isVerified) {
         self.completed = YES;
     }//end if
@@ -242,16 +256,98 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     if([fileManager fileExistsAtPath:self.destination]) {
         [fileManager removeItemAtPath:self.destination error:&removeFileError];
     }//end if
-    for(int index = 0; index < numberOfConnections; index++) {
-        NSString *partDestination = [NSString stringWithFormat:@"%@.part%d", self.destination, index];
-        if([fileManager fileExistsAtPath:partDestination]) {
-            [fileManager removeItemAtPath:partDestination error:&removeFileError];
-        }//end if
-    }
     if(removeFileError) {
         NSLog(@"Removing Existing File Error: %@", [removeFileError localizedDescription]);
     }//end if
+    [self removeFileParts];
 }
+
+- (void)setBytesWrittenForDownloadPart:(int)partNumber withNumberOfBytes:(int64_t)bytesWritten {
+    @synchronized(self.totalBytesWrittenArray) {
+        [self.totalBytesWrittenArray replaceObjectAtIndex:partNumber withObject:[NSNumber numberWithLongLong:bytesWritten]];
+    }
+}
+
+# pragma Part Information
+/*
+ * part will be numbered as part0, part1, part2, ... part(n-1)
+ * first n - 1 parts will have file size: self.totalBytesExpectedToWrite / numberOfConnections
+ * last part will have the remaining size
+ */
+- (int64_t) supposedFileSizeOfPart:(int) partNumber {
+    if(numberOfConnections == 1) {
+        return self.totalBytesExpectedToWrite;
+    }//end if
+    
+    int64_t perSessionBytesCount = self.totalBytesExpectedToWrite / numberOfConnections;
+    if(partNumber == numberOfConnections - 1) {
+        return self.totalBytesExpectedToWrite - (perSessionBytesCount * (numberOfConnections - 1));
+    } else {
+        return perSessionBytesCount;
+    }//end else
+}
+
+- (NSString *) rangeOfPart:(int) partNumber {
+    NSString *range = @"bytes=";
+    int64_t perSessionBytesCount = self.totalBytesExpectedToWrite / numberOfConnections;
+    range = [range stringByAppendingString:[[NSNumber numberWithLongLong:(perSessionBytesCount * partNumber)] stringValue]];
+    range = [range stringByAppendingString:@"-"];
+    if(partNumber != numberOfConnections - 1) {
+        range = [range stringByAppendingString:[NSString stringWithFormat:@"%lld", (perSessionBytesCount * (partNumber + 1)) - 1]];
+    }//end if
+    return range;
+}
+
+- (NSString *) destinationOfPart:(int) partNumber {
+    return [NSString stringWithFormat:@"%@.part%d", self.destination, partNumber];
+}
+
+- (BOOL) alreadyDownloadedPart:(int)partNumber {
+    @synchronized(self.totalBytesWrittenArray) {
+        return [self.totalBytesWrittenArray[partNumber] longLongValue] > 0;
+    }
+}
+
+# pragma Merge Downloaded Part(s)
+
+- (void) mergeDownloadedParts {
+    if(numberOfConnections == 1) {
+        [self moveTheOnlyDownloadedPartToDestination];
+    }//end if
+    else {
+        [self mergeDownloadedMoreThanOneDownloadedParts];
+    }
+}
+
+- (void) moveTheOnlyDownloadedPartToDestination {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *partPath = [self destinationOfPart:0];
+    
+    NSError *movingFileError;
+    if([fileManager fileExistsAtPath:partPath]) {
+        [fileManager moveItemAtPath:partPath toPath:self.destination error:&movingFileError];
+    }//end if
+}
+
+- (void) mergeDownloadedMoreThanOneDownloadedParts {
+    char **filesPath = (char **) malloc(sizeof(char*) * (numberOfConnections + 1));
+    int partNumber = 0;
+    for(partNumber = 0; partNumber < numberOfConnections; partNumber++) {
+        filesPath[partNumber] = [self convertNSStringToCString:[self destinationOfPart:partNumber]];
+    }//end for
+    filesPath[partNumber] = NULL;
+    char *resultFilePath = [self convertNSStringToCString:self.destination];
+    
+    concatenateFiles(filesPath, resultFilePath, numberOfConnections);
+    for(partNumber = 0; partNumber < numberOfConnections; partNumber++) {
+        free(filesPath[partNumber]);
+    }//end for
+    free(filesPath);
+    free(resultFilePath);
+    [self removeFileParts];
+}
+
+# pragma Error Handling
 
 - (BOOL) isHittingErrorBecauseOffline {
     if(self.error) {
@@ -279,9 +375,31 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     }//end else
 }
 
-- (void)setBytesWrittenForDownloadPart:(int)partNumber withNumberOfBytes:(int64_t)bytesWritten {
-    NSLog(@"bytes written %lld - part %d", bytesWritten, partNumber);
-    self.totalBytesWrittenArray[partNumber] = [NSNumber numberWithLongLong:bytesWritten];
+# pragma Utility
+
+- (int64_t) fileSizeOfFileAtPath:(NSString *)filePath {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *attributesError;
+    NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:filePath error:&attributesError];
+    if(attributesError) {
+        return -1;
+    }//end if
+    
+    NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+    return [fileSizeNumber longLongValue];
+}
+
+/*
+ * This function is used to convert an Objective C NSString to a char* in C
+ * Input: NSString
+ * Output: C - char*
+ */
+- (char*) convertNSStringToCString:(NSString *)str {
+    const char *cstr = [str cStringUsingEncoding:NSUTF8StringEncoding];//get cstring
+    int len = (int)strlen(cstr);//get its length
+    char *cStringCopy = (char *) malloc(sizeof(char) * (len + 1));//allocate memory, + 1 for ending '\0'
+    strcpy(cStringCopy, cstr);//make a copy
+    return cStringCopy;
 }
 
 @end

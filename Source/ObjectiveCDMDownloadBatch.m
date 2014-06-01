@@ -149,29 +149,24 @@
 
 - (void) downloadRequest:(NSMutableURLRequest *)request ofTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
     [request setTimeoutInterval:90.0];
-    int counter = 0;
-    int64_t perSessionBytesCount = downloadTaskInfo.totalBytesExpectedToWrite / [sessions count];
+    int partNumber = 0;
     for(NSURLSession *session in sessions) {
-        NSString *range = @"bytes=";
-        range = [range stringByAppendingString:[[NSNumber numberWithLongLong:(downloadTaskInfo.totalBytesExpectedToWrite / [sessions count]) * counter] stringValue]];
-        range = [range stringByAppendingString:@"-"];
-        if(counter != [sessions count] - 1) {
-            range = [range stringByAppendingString:[NSString stringWithFormat:@"%lld", (perSessionBytesCount * (counter + 1)) - 1]];
+        if([downloadTaskInfo alreadyDownloadedPart:partNumber]) {
+            continue;
         }//end if
-        [request setValue:range forHTTPHeaderField:@"Range"];
+        [request setValue:[downloadTaskInfo rangeOfPart:partNumber] forHTTPHeaderField:@"Range"];
         
         if(downloadTaskInfo.error) {
             NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithResumeData:downloadTaskInfo.error.userInfo[NSURLSessionDownloadTaskResumeData]];
-            downloadTask.taskDescription = [NSString stringWithFormat:@"Part-%d", counter];
+            downloadTask.taskDescription = [NSString stringWithFormat:@"Part-%d", partNumber];
             [downloadTask resume];
-            
             downloadTaskInfo.error = nil;
         } else {
             NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
-            downloadTask.taskDescription = [NSString stringWithFormat:@"Part-%d", counter];
+            downloadTask.taskDescription = [NSString stringWithFormat:@"Part-%d", partNumber];
             [downloadTask resume];
         }//end else
-        counter++;
+        partNumber++;
     }//end for
     
 }
@@ -238,7 +233,6 @@
             }//end for
         }];
     }//end for
-
 }
 
 - (void) suspendAllOnGoingDownloadTask {
