@@ -21,13 +21,13 @@
         // Custom initialization
         downloadLogs = [[NSMutableArray alloc] initWithArray:@[]];
         downloadTaskInfos = @[
-//            @{
-//                @"url": @"http://87.76.16.10/test10.zip",
-//                @"destination": @"test/test10.zip",
-//                @"fileSize": [NSNumber numberWithLongLong:11536384],
-//                @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
-//                @"identifier": @"Content-1001"
-//            }
+            @{
+                @"url": @"http://87.76.16.10/test10.zip",
+                @"destination": @"test/test10.zip",
+                @"fileSize": [NSNumber numberWithLongLong:11536384],
+                @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
+                @"identifier": @"Content-1001"
+            }
 //            , @{
 //                @"url": @"http://www.colorado.edu/conflict/peace/download/peace.zip",
 //                @"destination": @"test/peace.zip",
@@ -55,15 +55,15 @@
 //                @"progress": @0,
 //                @"completed": @NO
 //            },
-            @{
-                @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
-                @"destination": @"test/test100.zip",
-                @"fileSize": [NSNumber numberWithLongLong:104874307],
-                @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
-                @"identifier": @"Content-1005",
-                @"progress": @0,
-                @"completed": @NO
-            },
+//            @{
+//                @"url": @"http://speedtest.dal01.softlayer.com/downloads/test100.zip",
+//                @"destination": @"test/test100.zip",
+//                @"fileSize": [NSNumber numberWithLongLong:104874307],
+//                @"checksum": @"592b849861f8d5d9d75bda5d739421d88e264900",
+//                @"identifier": @"Content-1005",
+//                @"progress": @0,
+//                @"completed": @NO
+//            },
 //            @{
 //                @"url": @"http://www.colorado.edu/conflict/peace/download/peace_treatment.ZIP",
 //                @"destination": @"test/peace_treatment.zip",

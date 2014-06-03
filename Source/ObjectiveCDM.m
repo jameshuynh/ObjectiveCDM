@@ -19,7 +19,7 @@
         [sharedManager setTotalBytes:0];
         ((ObjectiveCDM *)sharedManager).fileHashAlgorithm = FileHashAlgorithmSHA1;
         [sharedManager listenToInternetConnectionChange];
-        [sharedManager setNumberOfConcurrentThreads:1];
+        [sharedManager setNumberOfConcurrentThreads:3];
     });
     return sharedManager;
 }

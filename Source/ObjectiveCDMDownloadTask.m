@@ -100,7 +100,7 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
         self.cachedProgress = 1;
     } else {
         int64_t totalVerifiedDownloadedBytes = [self captureTotalBytesDownloadedInFileParts];
-        if(totalVerifiedDownloadedBytes == self.totalBytesExpectedToWrite) {
+        if(self.totalBytesExpectedToWrite > 0 && totalVerifiedDownloadedBytes == self.totalBytesExpectedToWrite) {
             // has downloaded all parts
             BOOL result = [self mergeAndVerifyDownload];
             if(result) {
