@@ -259,9 +259,9 @@
     return distanceBetweenDates;
 }
 
-- (NSString *) downloadRate {
+- (int64_t) downloadRate {
     int64_t rate = numberOfBytesDownloadedSinceStart / [self elapsedSeconds];
-    return [NSString stringWithFormat:@"%@/s", [NSByteCountFormatter stringFromByteCount:rate countStyle:NSByteCountFormatterCountStyleFile]];
+    return rate;
 }
 
 - (BOOL) isDownloading {

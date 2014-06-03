@@ -64,6 +64,6 @@ typedef NSInteger ObjectiveCDMDownloadTaskStatus;
 - (void) resumeAllSuspendedTasks;
 - (BOOL) isDownloading;
 
-- (NSString *) downloadRate;
+- (int64_t) downloadRate;
 - (double) elapsedSeconds;
 @end

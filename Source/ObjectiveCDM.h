@@ -34,7 +34,7 @@
 - (void) cancelAllOutStandingTasks;
 - (void) continueInCompletedDownloads;
 - (void) suspendAllOnGoingDownloads;
-- (NSString *) downloadRate;
+- (NSArray *) downloadRateAndRemainingTime;
 
 @property(nonatomic, assign) int numberOfConcurrentThreads;
 @property(nonatomic, assign) FileHashAlgorithm fileHashAlgorithm;

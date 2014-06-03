@@ -178,7 +178,10 @@
 }
 
 - (void) updateOverallRate {
-    [overallRateLabel setText:[_objectiveCDM downloadRate]];
+    NSArray* downloadRateAndRemaining = [_objectiveCDM downloadRateAndRemainingTime];
+    NSString *downloadRate = downloadRateAndRemaining[0];
+    NSString *remainingTime = downloadRateAndRemaining[1];
+    [overallRateLabel setText:[NSString stringWithFormat:@"%@ - Remaining %@", downloadRate, remainingTime]];
 }
 
 - (void)didReceiveMemoryWarning {
