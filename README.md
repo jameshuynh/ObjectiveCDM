@@ -137,6 +137,12 @@ objectiveCDM.fileHashAlgorithm = FileHashAlgorithmMD5;
   // finish a task with ObjectiveCDMDownloadTask downloadInfo
 }
 
+- (void) didFinishAllForDataDelegate {
+  // this method is run on background thread
+  // do whatever needs to be done after a batch has been downloaded successfully
+}
+
+
 ```
 
 #### ObjectiveCDMDownloadTask

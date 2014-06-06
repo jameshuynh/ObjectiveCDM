@@ -218,6 +218,10 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
+- (void) didFinishAllForDataDelegate {
+    // handle whatever things that need to be done after the finish has been completed
+}
+
 - (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask *) downloadTask {
     NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:downloadTask.position inSection:0];
     [individualProgressViewsContainer reloadRowsAtIndexPaths:@[rowToReload] withRowAnimation:UITableViewRowAnimationNone];

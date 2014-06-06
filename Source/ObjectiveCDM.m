@@ -109,7 +109,7 @@
                 [self.uiDelegate didReachProgress:[self overallProgress]];
             }];
         }//end if
-        if(currentBatch.completed && self.uiDelegate) {
+        if(currentBatch.completed) {
             [self postCompleteAll];
         }//end if
     }//end if
@@ -155,7 +155,7 @@
                 [self.uiDelegate didReachProgress:[self overallProgress]];
             }];
         }//end if
-        if(currentBatch.completed && self.uiDelegate) {
+        if(currentBatch.completed) {
             [self postCompleteAll];
         }//end if
     }];
@@ -241,15 +241,22 @@ didCompleteWithError:(NSError *)error {
             [self.uiDelegate didFinishOnDownloadTaskUI:downloadTaskInfo];
         }];
     }//end if
-    if(currentBatch.completed && self.uiDelegate) {
+    if(currentBatch.completed) {
         [self postCompleteAll];
     }//end if
 }
 
 - (void) postCompleteAll {
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
-        [self.uiDelegate didFinishAll];
-    }];
+    
+    if(self.dataDelegate) {
+        [self.dataDelegate didFinishAllForDataDelegate];
+    }//end if
+    
+    if(self.uiDelegate) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+            [self.uiDelegate didFinishAll];
+        }];
+    }//end if
 }
 
 // Checks if we have an internet connection or not

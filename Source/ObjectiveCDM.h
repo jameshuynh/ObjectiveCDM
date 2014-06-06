@@ -52,4 +52,5 @@
 
 @protocol ObjectiveCDMDataDelegate
 - (void) didFinishDownloadTask:(ObjectiveCDMDownloadTask *)downloadInfo;
+- (void) didFinishAllForDataDelegate;
 @end
