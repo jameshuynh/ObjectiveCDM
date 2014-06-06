@@ -189,7 +189,8 @@ didCompleteWithError:(NSError *)error {
         NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
         ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch downloadInfoOfTaskUrl:downloadURL];
         if(downloadTaskInfo) {
-            downloadTaskInfo.error = error;
+            [downloadTaskInfo captureReceivedError:error];
+            [currentBatch redownloadRequestOfTask:downloadTaskInfo];
             if(self.uiDelegate) {
                 [self postDownloadErrorToUIDelegate:downloadTaskInfo];
             }//end if

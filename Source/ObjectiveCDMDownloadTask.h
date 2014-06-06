@@ -26,6 +26,7 @@
 @property(nonatomic, retain) NSString* fileName;
 @property(nonatomic, retain) NSString* checkSum;
 @property(nonatomic, retain) NSError* error;
+@property(nonatomic, retain) NSString* lastErrorMessage;
 @property(nonatomic, retain) NSString* identifier;
 
 - (instancetype) initWithURLString:(NSString *)urlString
@@ -41,10 +42,11 @@
                  andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
 
 - (void) cleanUp;
+- (void) cleanUpWithResumableData:(NSData *)data;
 - (float) downloadingProgress;
 - (BOOL) verifyDownload;
 - (NSString *) fullErrorDescription;
 - (BOOL) isHittingErrorBecauseOffline;
 - (BOOL) isHittingErrorConnectingToServer;
-
+- (void) captureReceivedError:(NSError *)error;
 @end

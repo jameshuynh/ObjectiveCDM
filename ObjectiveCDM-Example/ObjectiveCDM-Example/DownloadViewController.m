@@ -224,7 +224,7 @@
 }
 
 - (void) didHitDownloadErrorOnTask:(ObjectiveCDMDownloadTask* ) task {
-    NSString *errorDescription = [task fullErrorDescription];
+    NSString *errorDescription = task.lastErrorMessage;
     [downloadLogs addObject:errorDescription];
     [downloadLogsView setText:[downloadLogs componentsJoinedByString:@"\n"]];
 }

@@ -47,4 +47,5 @@ typedef NSInteger FileHashAlgorithm;
 - (void) suspendAllOnGoingDownloadTask;
 - (void) resumeAllSuspendedTasks;
 - (BOOL) isDownloading;
+- (void) redownloadRequestOfTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo;
 @end

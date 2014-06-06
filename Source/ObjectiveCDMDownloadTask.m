@@ -143,6 +143,17 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     self.completed = NO;
     self.error = nil;
     self.totalBytesWritten = 0;
+    [self deleteDestinationFile];
+}
+
+- (void) cleanUpWithResumableData:(NSData *)data {
+    self.completed = NO;
+    self.totalBytesWritten = data.length;
+    [self deleteDestinationFile];
+    self.error = nil;
+}
+
+- (void) deleteDestinationFile {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *removeFileError;
     if([fileManager fileExistsAtPath:self.destination]) {
@@ -155,25 +166,32 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (BOOL) isHittingErrorBecauseOffline {
     if(self.error) {
-        return self.error.code == -1009;
+        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %d)", NSURLErrorNotConnectedToInternet]].location != NSNotFound || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %d)", NSURLErrorNetworkConnectionLost]].location != NSNotFound;
     } else {
         return NO;
     }
 }
 
 - (BOOL) isHittingErrorConnectingToServer {
-    if(self.error) {
-        return (self.error.code == -1004 || [[self.error description] isEqualToString:@"Could not connect to the server."]);
+    if(self.lastErrorMessage) {
+        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %d)", NSURLErrorRedirectToNonExistentLocation]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %d)", NSURLErrorBadServerResponse]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %d)", NSURLErrorZeroByteResource]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %d)", NSURLErrorTimedOut]].location != NSNotFound;
     } else {
         return NO;
     }//end else
+}
+
+- (void) captureReceivedError:(NSError *)error {
+    self.error = error;
+    self.lastErrorMessage = [self fullErrorDescription];
 }
 
 - (NSString *) fullErrorDescription {
     if(self.error) {
         int errorCode = (int)[self.error code];
         return [NSString stringWithFormat:@"Downloading URL %@ failed because of error: %@ (Code %d)", self.urlString, [self.error localizedDescription], errorCode];
-        return @"";
     } else {
         return @"No Error";
     }//end else

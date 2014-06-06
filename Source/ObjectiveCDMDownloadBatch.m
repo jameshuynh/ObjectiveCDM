@@ -6,6 +6,8 @@
 //
 //
 
+#define OBJECTIVECDM_MAX_TIME_OUT 90
+
 #import "ObjectiveCDMDownloadBatch.h"
 
 @implementation ObjectiveCDMDownloadBatch
@@ -140,7 +142,7 @@
 }
 
 - (void) downloadRequest:(NSMutableURLRequest *)request ofTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
-    [request setTimeoutInterval:90.0];
+    [request setTimeoutInterval:OBJECTIVECDM_MAX_TIME_OUT];
     if(downloadTaskInfo.error) {
         NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithResumeData:downloadTaskInfo.error.userInfo[NSURLSessionDownloadTaskResumeData]];
         [downloadTask resume];
@@ -149,7 +151,22 @@
         NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
         [downloadTask resume];
     }//end else
-    
+}
+
+// this will be ontry triggerd in case the download task is failed
+- (void) redownloadRequestOfTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
+    NSData *resumableData;
+    if(downloadTaskInfo.error && (resumableData = downloadTaskInfo.error.userInfo[NSURLSessionDownloadTaskResumeData])) {
+        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithResumeData:resumableData];
+        [downloadTaskInfo cleanUpWithResumableData:resumableData];
+        [downloadTask resume];
+    } else {
+        NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:downloadTaskInfo.url];
+        [request setTimeoutInterval:OBJECTIVECDM_MAX_TIME_OUT];
+        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
+        [downloadTaskInfo cleanUp];
+        [downloadTask resume];
+    }
 }
 
 - (void) requestForTotalBytesForURL:(NSURL *)url withCallback:(void (^)(int64_t))completed {
@@ -201,8 +218,7 @@
     }
 }
 
-- (void) resumeAllSuspendedTasks {
-    
+- (void) resumeAllSuspendedTasks {    
     [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
         for(NSURLSessionDownloadTask *downloadTask in downloadTasks) {
             NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
