@@ -105,9 +105,9 @@
         
         [currentBatch updateCompleteStatus];
         if(self.uiDelegate) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self.uiDelegate didReachProgress:[self overallProgress]];
-            }];
+            });
         }//end if
         if(currentBatch.completed) {
             [self postCompleteAll];
@@ -151,9 +151,9 @@
         }//end for
         [batch updateCompleteStatus];
         if(self.uiDelegate) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self.uiDelegate didReachProgress:[self overallProgress]];
-            }];
+            });
         }//end if
         if(currentBatch.completed) {
             [self postCompleteAll];
@@ -162,23 +162,23 @@
 }
 
 - (void) postProgressToUIDelegate {
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+    dispatch_async(dispatch_get_main_queue(), ^{
         float overallProgress = [self overallProgress];
         [self.uiDelegate didReachProgress:overallProgress];
-    }];
+    });
 }
 
 - (void) postToUIDelegateOnIndividualDownload:(ObjectiveCDMDownloadTask *)task {
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+    dispatch_async(dispatch_get_main_queue(), ^{
         task.cachedProgress = task.downloadingProgress;
         [self.uiDelegate didReachIndividualProgress:task.cachedProgress onDownloadTask:task];
-    }];
+    });
 }
 
 - (void) postDownloadErrorToUIDelegate:(ObjectiveCDMDownloadTask *)task {
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self.uiDelegate didHitDownloadErrorOnTask:task];
-    }];
+    });
 }
 
 # pragma NSURLSessionDelegate
@@ -237,9 +237,9 @@ didCompleteWithError:(NSError *)error {
         [self.dataDelegate didFinishDownloadTask:downloadTaskInfo];
     }//end if
     if(self.uiDelegate) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self.uiDelegate didFinishOnDownloadTaskUI:downloadTaskInfo];
-        }];
+        });
     }//end if
     if(currentBatch.completed) {
         [self postCompleteAll];
@@ -253,9 +253,9 @@ didCompleteWithError:(NSError *)error {
     }//end if
     
     if(self.uiDelegate) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^ {
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self.uiDelegate didFinishAll];
-        }];
+        });
     }//end if
 }
 
