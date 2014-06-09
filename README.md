@@ -21,6 +21,8 @@ pod "ObjectiveCDM", "~> 1.0.2"
 - Checksum (MD5, SHA1, SHA512) / File Size is verified once a file has been downloaded. Auto redownload file if Checksum / File Size is mismatched.
 - Auto resume on internet connection recovery.
 - Overall Progress & individual download progress
+- Downloading Rate Computation
+- Remaining Time Computation
 
 ### Usage
 
