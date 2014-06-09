@@ -172,6 +172,14 @@ NSString *identifier = downloadTaskInfo.identifier;
 NSArray *currentDownloadTask = [[ObjectiveCDM sharedInstance] downloadingTasks];
 ```
 
+- To get the downloading rate and remaining time:
+
+```objective-c
+NSArray* downloadRateAndRemaining = [[ObjectiveCDM sharedInstance] downloadRateAndRemainingTime];
+NSString *downloadRate = downloadRateAndRemaining[0];
+NSString *remainingTime = downloadRateAndRemaining[1];
+```
+
 ### Running Example
 
 ```bash
