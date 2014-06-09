@@ -17,6 +17,14 @@ enum {
 
 typedef NSInteger FileHashAlgorithm;
 
+enum {
+    kUnitStringBinaryUnits     = 1 << 0,
+    kUnitStringOSNativeUnits   = 1 << 1,
+    kUnitStringLocalizedFormat = 1 << 2
+};
+
+typedef NSInteger ObjectiveCDMDownloadTaskStatus;
+
 @class ObjectiveCDMDownloadTask;
 
 #import "ObjectiveCDM.h"
@@ -27,6 +35,8 @@ typedef NSInteger FileHashAlgorithm;
     NSMutableArray *urls;
     NSURLSession *session;
     FileHashAlgorithm fileHashAlgorithm;
+    int64_t numberOfBytesDownloadedSinceStart;
+    NSDate *startTime;
 }
 
 @property(nonatomic, assign) BOOL completed;
@@ -48,4 +58,7 @@ typedef NSInteger FileHashAlgorithm;
 - (void) resumeAllSuspendedTasks;
 - (BOOL) isDownloading;
 - (void) redownloadRequestOfTask:(ObjectiveCDMDownloadTask *)downloadTaskInfo;
+
+- (int64_t) downloadRate;
+- (double) elapsedSeconds;
 @end

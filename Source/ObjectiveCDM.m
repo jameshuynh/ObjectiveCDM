@@ -79,6 +79,44 @@
     }
 }
 
+- (NSArray *) downloadRateAndRemainingTime {
+    int64_t rate = [currentBatch downloadRate];
+    NSString *bytePerSeconds = [NSString stringWithFormat:@"%@/s", [NSByteCountFormatter stringFromByteCount:rate countStyle:NSByteCountFormatterCountStyleFile]];
+    
+    NSString *remainingTime = [self remainingTimeGivenDownloadingRate:rate];
+    
+    return @[bytePerSeconds, remainingTime];
+}
+
+- (NSString *) remainingTimeGivenDownloadingRate:(int64_t) downloadRate {
+    if(downloadRate == 0) {
+        return @"Unknown";
+    }//end if
+    
+    int64_t actualTotalBytes = 0;
+    NSDictionary *bytesInfo = [currentBatch totalBytesWrittenAndReceived];
+    
+    if(totalBytes == 0) {
+        actualTotalBytes = [(NSNumber *)bytesInfo[@"totalToBeReceivedBytes"] longLongValue];
+    } else {
+        actualTotalBytes = totalBytes;
+    }//end else
+    
+    int64_t actualDownloadedBytes = [(NSNumber *)bytesInfo[@"totalDownloadedBytes"] longLongValue] + initialDownloadedBytes;
+    
+    float timeRemaining = (actualTotalBytes - actualDownloadedBytes) / downloadRate;
+    return [self formatTimeFromSeconds:timeRemaining];
+}
+
+- (NSString *)formatTimeFromSeconds:(int64_t) numberOfSeconds {
+    
+    int64_t seconds = numberOfSeconds % 60;
+    int64_t minutes = (numberOfSeconds / 60) % 60;
+    int64_t hours = numberOfSeconds / 3600;
+    
+    return [NSString stringWithFormat:@"%02lld:%02lld:%02lld", hours, minutes, seconds];
+}
+
 - (void) startDownloadingCurrentBatch {
     [self startADownloadBatch:currentBatch];
 }

@@ -15,11 +15,13 @@
     UITextView *downloadLogsView;
     Reachability *internetReachability;
     UILabel *overallProgressLabel;
+    UILabel *overallRateLabel;
     UITableView *individualProgressViewsContainer;
     UIProgressView *overallProgressBar;
     NSArray *downloadTaskInfos;
     NSArray *objectiveCDMDownloadingTasks;
-
+    NSTimer *downloadRateTimer;
+    NSString *currentDownloadRate;
     NSString *currentInputURL;
 }
 
