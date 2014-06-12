@@ -12,32 +12,31 @@
 
 - (instancetype) initWithURLString:(NSString *)urlString
                    withDestination:(NSString *)destination
-     andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
+     andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
                        andChecksum:(NSString *)checksum
               andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput {
     self = [super init];
     if(self) {
         [self commonInstructor:urlString
                withDestination:destination
- andTotalBytesExepectedToWrite:totalBytesExpectedToWriteInput
+ andTotalBytesExpectedToWrite:totalBytesExpectedToWriteInput
                    andChecksum:checksum
           andFileHashAlgorithm:fileHashAlgorithmInput];
         self.url = [[NSURL alloc] initWithString:urlString];
-        self.totalBytesExpectedToWrite = totalBytesExpectedToWriteInput;
     }//end if
     return self;
 }
 
 - (instancetype) initWithURL:(NSURL *)url
              withDestination:(NSString *)destination
-andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
+andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
                  andChecksum:(NSString *)checksum
         andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput {
     self = [super init];
     if(self) {
         [self commonInstructor:[url absoluteString]
                withDestination:destination
- andTotalBytesExepectedToWrite:totalBytesExpectedToWriteInput
+ andTotalBytesExpectedToWrite:totalBytesExpectedToWriteInput
                    andChecksum:checksum
           andFileHashAlgorithm:fileHashAlgorithmInput];
         self.url = url;
@@ -48,7 +47,7 @@ andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (void) commonInstructor:(NSString *)urlString
           withDestination:(NSString *)destination
-andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWriteInput
+andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
               andChecksum:(NSString *)checksum
      andFileHashAlgorithm:(FileHashAlgorithm)algorithm {
     self.completed = NO;

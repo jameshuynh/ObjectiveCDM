@@ -31,13 +31,13 @@
 
 - (instancetype) initWithURLString:(NSString *)urlString
                  withDestination:(NSString *)destination
-                 andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWrite
+                 andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
                  andChecksum:(NSString *)checksum
                  andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
 
 - (instancetype) initWithURL:(NSURL *)url
                  withDestination:(NSString *)destination
-                 andTotalBytesExepectedToWrite:(int64_t)totalBytesExpectedToWrite
+                 andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
                  andChecksum:(NSString *)checksum
                  andFileHashAlgorithm:(FileHashAlgorithm) fileHashAlgorithmInput;
 

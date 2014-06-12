@@ -45,14 +45,14 @@
             downloadTask = [[ObjectiveCDMDownloadTask alloc]
                                 initWithURLString:urlString
                                   withDestination:destination
-                    andTotalBytesExepectedToWrite:totalExpectedToWrite
+                    andTotalBytesExpectedToWrite:totalExpectedToWrite
                                       andChecksum:taskInfo[@"checksum"]
                               andFileHashAlgorithm:fileHashAlgorithm];
         } else {
             downloadTask = [[ObjectiveCDMDownloadTask alloc]
-                            initWithURLString:taskInfo[@"url"]
+                            initWithURL:taskInfo[@"url"]
                               withDestination:destination
-                andTotalBytesExepectedToWrite:totalExpectedToWrite
+                andTotalBytesExpectedToWrite:totalExpectedToWrite
                                   andChecksum:taskInfo[@"checksum"]
                          andFileHashAlgorithm:fileHashAlgorithm];
 ;

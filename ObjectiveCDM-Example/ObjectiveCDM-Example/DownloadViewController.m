@@ -22,7 +22,7 @@
         downloadLogs = [[NSMutableArray alloc] initWithArray:@[]];
         downloadTaskInfos = @[
             @{
-                @"url": @"http://87.76.16.10/test10.zip",
+                @"url": [NSURL URLWithString:@"http://87.76.16.10/test10.zip"],
                 @"destination": @"test/test10.zip",
                 @"fileSize": [NSNumber numberWithLongLong:11536384],
                 @"checksum": @"5e8bbbb38d137432ce0c8029da83e52e635c7a4f",
@@ -90,7 +90,7 @@
     [overallProgressLabel setFont:[UIFont boldSystemFontOfSize:20]];
     
     [overallRateLabel setTextAlignment:NSTextAlignmentCenter];
-    [overallRateLabel setText:@"Initializing..."];
+    [overallRateLabel setText:@"Downloading Rate"];
     [overallRateLabel setTextColor:[UIColor blackColor]];
     [overallRateLabel setFont:[UIFont boldSystemFontOfSize:12]];
     
