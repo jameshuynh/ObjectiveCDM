@@ -133,7 +133,6 @@
     }
     downloadTaskInfo = [currentBatch addTask:dictionary];
     if(downloadTaskInfo) {
-        NSLog(@"current batch is downloading %d", [currentBatch isDownloading]);
         if(downloadTaskInfo.completed) {
             [self processCompletedDownload:downloadTaskInfo];
             [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
@@ -142,7 +141,7 @@
         }//end if
         
         [currentBatch updateCompleteStatus];
-        if(self.uiDelegate) {
+        if(self.uiDelegate && [self.uiDelegate respondsToSelector:@selector(didReachProgress:)]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.uiDelegate didReachProgress:[self overallProgress]];
             });
@@ -200,13 +199,16 @@
 }
 
 - (void) postProgressToUIDelegate {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        float overallProgress = [self overallProgress];
-        [self.uiDelegate didReachProgress:overallProgress];
-    });
+    if(self.uiDelegate && [self.uiDelegate respondsToSelector:@selector(didReachProgress:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            float overallProgress = [self overallProgress];
+            [self.uiDelegate didReachProgress:overallProgress];
+        });
+    }//end if
 }
 
 - (void) postToUIDelegateOnIndividualDownload:(ObjectiveCDMDownloadTask *)task {
+    if(self.uiDelegate && [self.uiDelegate respondsToSelector:@selector(didReachIndividualProgress:onDownloadTask:)])
     dispatch_async(dispatch_get_main_queue(), ^{
         task.cachedProgress = task.downloadingProgress;
         [self.uiDelegate didReachIndividualProgress:task.cachedProgress onDownloadTask:task];
@@ -214,9 +216,11 @@
 }
 
 - (void) postDownloadErrorToUIDelegate:(ObjectiveCDMDownloadTask *)task {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.uiDelegate didHitDownloadErrorOnTask:task];
-    });
+    if(self.uiDelegate && [self.uiDelegate respondsToSelector:@selector(didHitDownloadErrorOnTask:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.uiDelegate didHitDownloadErrorOnTask:task];
+        });
+    }//end if
 }
 
 # pragma NSURLSessionDelegate
@@ -229,9 +233,7 @@ didCompleteWithError:(NSError *)error {
         if(downloadTaskInfo) {
             [downloadTaskInfo captureReceivedError:error];
             [currentBatch redownloadRequestOfTask:downloadTaskInfo];
-            if(self.uiDelegate) {
-                [self postDownloadErrorToUIDelegate:downloadTaskInfo];
-            }//end if
+            [self postDownloadErrorToUIDelegate:downloadTaskInfo];
         }//end if
     }//end if
 }
@@ -241,10 +243,8 @@ didCompleteWithError:(NSError *)error {
     float progress = (totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
     ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch updateProgressOfDownloadURL:downloadURL withProgress:progress withTotalBytesWritten:totalBytesWritten];
     if(downloadTaskInfo) {
-        if(self.uiDelegate) {
-            [self postProgressToUIDelegate];
-            [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
-        }//end if
+        [self postProgressToUIDelegate];
+        [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
     }//end if
 }
 
@@ -271,14 +271,16 @@ didCompleteWithError:(NSError *)error {
 }
 
 - (void) processCompletedDownload:(ObjectiveCDMDownloadTask *)downloadTaskInfo {
-    if(self.dataDelegate) {
+    if(self.dataDelegate && [self.dataDelegate respondsToSelector:@selector(didFinishDownloadTask:)]) {
         [self.dataDelegate didFinishDownloadTask:downloadTaskInfo];
     }//end if
-    if(self.uiDelegate) {
+    
+    if(self.uiDelegate && [self.uiDelegate respondsToSelector:@selector(didFinishOnDownloadTaskUI:)]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.uiDelegate didFinishOnDownloadTaskUI:downloadTaskInfo];
         });
     }//end if
+    
     if(currentBatch.completed) {
         [self postCompleteAll];
     }//end if
@@ -306,7 +308,7 @@ didCompleteWithError:(NSError *)error {
     internetReachability.reachableBlock = ^(Reachability *reach) {
         // Update the UI on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Yayyy, we have the interwebs!");
+            // NSLog(@"Yayyy, we have the interwebs!");
             [_weakSelf continueInCompletedDownloads];
         });
     };
@@ -315,7 +317,7 @@ didCompleteWithError:(NSError *)error {
     internetReachability.unreachableBlock = ^(Reachability *reach) {
         // Update the UI on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Someone broke the internet :(");
+            // NSLog(@"Someone broke the internet :(");
             [_weakSelf suspendAllOnGoingDownloads];
         });
     };

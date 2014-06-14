@@ -42,15 +42,25 @@
 
 @end
 
-@protocol ObjectiveCDMUIDelegate
+@protocol ObjectiveCDMUIDelegate <NSObject>
+
+@required
+- (void) didFinishAll;
+
+@optional
 - (void) didReachProgress:(float)progress;
 - (void) didHitDownloadErrorOnTask:(ObjectiveCDMDownloadTask* ) task;
-- (void) didFinishAll;
 - (void) didFinishOnDownloadTaskUI:(ObjectiveCDMDownloadTask *) task;
 - (void) didReachIndividualProgress:(float)progress onDownloadTask:(ObjectiveCDMDownloadTask* ) task;
+
 @end
 
-@protocol ObjectiveCDMDataDelegate
-- (void) didFinishDownloadTask:(ObjectiveCDMDownloadTask *)downloadInfo;
+@protocol ObjectiveCDMDataDelegate <NSObject>
+
+@required
 - (void) didFinishAllForDataDelegate;
+
+@optional
+- (void) didFinishDownloadTask:(ObjectiveCDMDownloadTask *)downloadInfo;
+
 @end
