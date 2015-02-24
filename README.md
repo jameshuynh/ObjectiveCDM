@@ -182,6 +182,12 @@ NSString *downloadRate = downloadRateAndRemaining[0];
 NSString *remainingTime = downloadRateAndRemaining[1];
 ```
 
+- To check if the download manager is downloading:
+
+```objective-c
+BOOL isDownloading = [[ObjectiveCDM sharedInstance] isDownloading];
+```
+
 ### Running Example
 
 ```bash

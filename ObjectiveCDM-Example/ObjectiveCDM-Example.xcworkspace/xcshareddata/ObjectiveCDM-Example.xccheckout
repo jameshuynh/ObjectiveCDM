@@ -10,29 +10,29 @@
 	<string>ObjectiveCDM-Example</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>E11CA5C9-689E-4279-ABD6-13672D55E2DB</key>
+		<key>E9FF1D02D223FFD8CF63CEBD5F83804BF794D823</key>
 		<string>ssh://github.com/jameshuynh/ObjectiveCDM.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>ObjectiveCDM-Example/ObjectiveCDM-Example.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>E11CA5C9-689E-4279-ABD6-13672D55E2DB</key>
+		<key>E9FF1D02D223FFD8CF63CEBD5F83804BF794D823</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/jameshuynh/ObjectiveCDM.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>E11CA5C9-689E-4279-ABD6-13672D55E2DB</string>
+	<string>E9FF1D02D223FFD8CF63CEBD5F83804BF794D823</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E11CA5C9-689E-4279-ABD6-13672D55E2DB</string>
+			<string>E9FF1D02D223FFD8CF63CEBD5F83804BF794D823</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ObjectiveCDM</string>
 		</dict>

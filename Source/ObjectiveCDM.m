@@ -50,6 +50,14 @@
     return progress;
 }
 
+- (BOOL) isDownloading {
+    if(currentBatch) {
+        return currentBatch.completed == NO;
+    } else {
+        return NO;
+    }//end else
+}
+
 - (NSURLSession *)session {
     static NSURLSession *backgroundSession = nil;
     static dispatch_once_t onceToken;
