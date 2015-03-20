@@ -80,6 +80,11 @@
     NSString *destinationPath = downloadTaskInfo.destination;
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
+    NSError *removeExistingFileError;
+    if([fileManager fileExistsAtPath:destinationPath]) {
+        [fileManager removeItemAtPath:destinationPath error:&removeExistingFileError];
+    }//end if
+
     [fileManager moveItemAtPath:downloadedFileLocation.path toPath:destinationPath error:&movingFileError];
     
     if(movingFileError) {

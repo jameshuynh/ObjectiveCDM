@@ -12,7 +12,7 @@ Choose ObjectiveCDM for your next project as your download manager!
 
 ```ruby
 platform :ios, '7.0'
-pod "ObjectiveCDM", "~> 1.0.5"
+pod "ObjectiveCDM", "~> 1.0.6"
 ```
 
 ### Features
