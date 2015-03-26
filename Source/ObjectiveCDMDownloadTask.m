@@ -58,8 +58,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     fileHashAlgorithm = algorithm;
    
     
-    NSString *documentDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    self.destination = [NSString stringWithFormat:@"%@/%@", documentDirectory, destination];
+    self.destination = destination;
     self.fileName = [self.destination lastPathComponent];
     [self prepareFolderForDestination];
 }
@@ -73,7 +72,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 }
 
 - (void) prepareFolderForDestination {
-    NSString *containerFolderPath = [self.destination stringByDeletingLastPathComponent];
+    NSString *containerFolderPath = [[self absoluteDestinationPath] stringByDeletingLastPathComponent];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![[NSFileManager defaultManager] fileExistsAtPath:containerFolderPath]){
         NSError* createDirectoryError;
@@ -85,7 +84,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
     }//end if
     
-    if([fileManager fileExistsAtPath:self.destination] == YES) {
+    if([fileManager fileExistsAtPath:[self absoluteDestinationPath]] == YES) {
         // file exist at destination -> verify if this file has been downloaded before
         if([self verifyDownload]) {
             self.cachedProgress = 1;
@@ -102,7 +101,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     // file does not exist as expected location
-    if([fileManager fileExistsAtPath:self.destination] == NO) {
+    if([fileManager fileExistsAtPath:[self absoluteDestinationPath]] == NO) {
         return NO;
     }//end if
     
@@ -112,7 +111,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
         isVerified = [calculatedChecksum isEqualToString:self.checkSum];
     } else { // check for file size
         NSError *attributesError;
-        NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:self.destination error:&attributesError];
+        NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:[self absoluteDestinationPath] error:&attributesError];
         NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
         int64_t fileSize = [fileSizeNumber longLongValue];
         isVerified = (fileSize == self.totalBytesExpectedToWrite);
@@ -127,12 +126,13 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 }
 
 - (NSString *) retrieveChecksumOfDownloadedFile {
+    NSString *absoluteDestinationPath = [self absoluteDestinationPath];
     if(fileHashAlgorithm == FileHashAlgorithmMD5) {
-        return [FileHash md5HashOfFileAtPath:self.destination];
+        return [FileHash md5HashOfFileAtPath:absoluteDestinationPath];
     } else if(fileHashAlgorithm == FileHashAlgorithmSHA1) {
-        return [FileHash sha1HashOfFileAtPath:self.destination];
+        return [FileHash sha1HashOfFileAtPath:absoluteDestinationPath];
     } else if(fileHashAlgorithm == FileHashAlgorithmSHA1) {
-        return [FileHash sha512HashOfFileAtPath:self.destination];
+        return [FileHash sha512HashOfFileAtPath:absoluteDestinationPath];
     }//end else
     
     return nil;
@@ -155,8 +155,9 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 - (void) deleteDestinationFile {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *removeFileError;
-    if([fileManager fileExistsAtPath:self.destination]) {
-        [fileManager removeItemAtPath:self.destination error:&removeFileError];
+    NSString *absoluteDestinationPath = [self absoluteDestinationPath];
+    if([fileManager fileExistsAtPath:absoluteDestinationPath]) {
+        [fileManager removeItemAtPath:absoluteDestinationPath error:&removeFileError];
     }//end if
     if(removeFileError) {
         NSLog(@"Removing Existing File Error: %@", [removeFileError localizedDescription]);
@@ -195,5 +196,13 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
         return @"No Error";
     }//end else
 }
+
+// this is to counter iOS8 issue where the simulator will change the document directory every time we
+// launch new simulator
+- (NSString *) absoluteDestinationPath {
+    NSString *documentDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [NSString stringWithFormat:@"%@/%@", documentDirectory, self.destination];
+}
+
 
 @end

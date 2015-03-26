@@ -49,4 +49,5 @@
 - (BOOL) isHittingErrorBecauseOffline;
 - (BOOL) isHittingErrorConnectingToServer;
 - (void) captureReceivedError:(NSError *)error;
+- (NSString *) absoluteDestinationPath;
 @end

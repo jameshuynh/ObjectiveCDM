@@ -39,7 +39,7 @@
     if(taskInfo[@"fileSize"]) {
         totalExpectedToWrite = [(NSNumber *)taskInfo[@"fileSize"] longLongValue];
     }
-    if([self isTaskExistWithURL:urlString andDestination:destination] == NO) {
+    if([self isTaskExistWithURL:urlString] == NO) {
         ObjectiveCDMDownloadTask *downloadTask = nil;
         if(isURLString) {
             downloadTask = [[ObjectiveCDMDownloadTask alloc]
@@ -70,22 +70,22 @@
     return nil;
 }
 
-- (BOOL) isTaskExistWithURL:(NSString *)urlString andDestination:(NSString *)destination {
+- (BOOL) isTaskExistWithURL:(NSString *)urlString {
     return [urls indexOfObject:urlString] != NSNotFound;
 }
 
 - (BOOL) handleDownloadedFileAt:(NSURL *)downloadedFileLocation forDownloadURL:(NSString *)downloadURL {
     NSError *movingFileError;
     ObjectiveCDMDownloadTask *downloadTaskInfo = [self downloadInfoOfTaskUrl:downloadURL];
-    NSString *destinationPath = downloadTaskInfo.destination;
+    NSString *absoluteDestinationPath = [downloadTaskInfo absoluteDestinationPath];
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
     NSError *removeExistingFileError;
-    if([fileManager fileExistsAtPath:destinationPath]) {
-        [fileManager removeItemAtPath:destinationPath error:&removeExistingFileError];
+    if([fileManager fileExistsAtPath:absoluteDestinationPath]) {
+        [fileManager removeItemAtPath:absoluteDestinationPath error:&removeExistingFileError];
     }//end if
 
-    [fileManager moveItemAtPath:downloadedFileLocation.path toPath:destinationPath error:&movingFileError];
+    [fileManager moveItemAtPath:downloadedFileLocation.path toPath:absoluteDestinationPath error:&movingFileError];
     
     if(movingFileError) {
         NSLog(@"Error: %@", movingFileError.localizedDescription);

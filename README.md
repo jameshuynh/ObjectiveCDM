@@ -15,6 +15,11 @@ platform :ios, '7.0'
 pod "ObjectiveCDM", "~> 1.0.6"
 ```
 
+### Change Log for 1.0.6
+
+- Some small bug fixes
+- Change destination on ObjectiveCDownloadTask to store relative path instead of absolute path like in previous version 
+
 ### Features
 
 - Ability to download a batch of files.
