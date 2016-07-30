@@ -173,7 +173,10 @@
         [request setTimeoutInterval:OBJECTIVECDM_MAX_TIME_OUT];
         NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
         [downloadTaskInfo cleanUp];
-        [downloadTask resume];
+        // cancel current task
+        [downloadTask cancel];
+        // restart a completely new one
+        [self startDownloadTask:downloadTaskInfo];
     }
 }
 

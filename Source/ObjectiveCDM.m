@@ -62,7 +62,7 @@
     static NSURLSession *backgroundSession = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfiguration:@"com.ObjectiveCDM.NSURLSession"];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.ObjectiveCDM.NSURLSession"];
         config.HTTPMaximumConnectionsPerHost = 4;
         backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     });
@@ -185,6 +185,9 @@
                     ObjectiveCDMDownloadTask *downloadTaskInfo = [batch captureDownloadingInfoOfDownloadTask:downloadTask];
                     [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
                     isDownloading = YES;
+                    if([downloadTask state] == NSURLSessionTaskStateSuspended) {
+                        [downloadTask resume];
+                    }//end if
                 }
             }//end for
             if(downloadTaskInfo.completed == YES) {
@@ -192,7 +195,7 @@
                 [self postToUIDelegateOnIndividualDownload:downloadTaskInfo];
             } else if(isDownloading == NO) {
                 [batch startDownloadTask:downloadTaskInfo];
-            }//end if
+            }
         }//end for
         [batch updateCompleteStatus];
         if(self.uiDelegate) {
@@ -235,7 +238,7 @@
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)downloadTask
 didCompleteWithError:(NSError *)error {
-    if(error) {
+    if(error && [error code] != NSURLErrorCancelled) {
         NSString *downloadURL = [[[downloadTask originalRequest] URL] absoluteString];
         ObjectiveCDMDownloadTask *downloadTaskInfo = [currentBatch downloadInfoOfTaskUrl:downloadURL];
         if(downloadTaskInfo) {
