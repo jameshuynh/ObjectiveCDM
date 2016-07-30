@@ -1,3 +1,9 @@
+### Disclaimer
+
+If you are using swift for your project, you can consider using the swift version of ObjectiveCDM:
+
+https://github.com/jameshuynh/JHDownloadManager
+
 ### ObjectiveCDM: A Dead Simple Download Manager
 
 ObjectiveCDM is a files download manager built on top of NSURLSession for iOS. It supports auto resume on internet connection recovery.
