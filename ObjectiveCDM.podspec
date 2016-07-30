@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "ObjectiveCDM"
-  s.version      = "1.0.6"
+  s.version      = "1.0.7"
   s.summary      = "Dead Simple batch of file Download Manager"
 
   s.description  = <<-DESC

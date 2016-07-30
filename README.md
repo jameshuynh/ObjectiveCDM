@@ -18,8 +18,13 @@ Choose ObjectiveCDM for your next project as your download manager!
 
 ```ruby
 platform :ios, '7.0'
-pod "ObjectiveCDM", "~> 1.0.6"
+pod "ObjectiveCDM", "~> 1.0.7"
 ```
+
+### Change Log for 1.0.7
+
+- Fix an issue when task hits an error and cannot be resumed. A new task now is spawn to download the file. The existing task would be set to cancelled
+- Resume a task if it is suspended
 
 ### Change Log for 1.0.6
 
