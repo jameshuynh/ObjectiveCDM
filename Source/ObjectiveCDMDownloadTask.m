@@ -166,7 +166,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (BOOL) isHittingErrorBecauseOffline {
     if(self.error) {
-        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorNotConnectedToInternet]].location != NSNotFound || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorNetworkConnectionLost]].location != NSNotFound;
+        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorNotConnectedToInternet]].location != NSNotFound || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorNetworkConnectionLost]].location != NSNotFound;
     } else {
         return NO;
     }
@@ -174,8 +174,8 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (BOOL) isHittingErrorConnectingToServer {
     if(self.lastErrorMessage) {
-        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorRedirectToNonExistentLocation]].location != NSNotFound \
-            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorBadServerResponse]].location != NSNotFound \
+        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorRedirectToNonExistentLocation]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorBadServerResponse]].location != NSNotFound \
             || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorZeroByteResource]].location != NSNotFound \
             || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorTimedOut]].location != NSNotFound;
     } else {
