@@ -166,7 +166,7 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (BOOL) isHittingErrorBecauseOffline {
     if(self.error) {
-        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorNotConnectedToInternet]].location != NSNotFound || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorNetworkConnectionLost]].location != NSNotFound;
+        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", (long)NSURLErrorNotConnectedToInternet]].location != NSNotFound || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", (long)NSURLErrorNetworkConnectionLost]].location != NSNotFound;
     } else {
         return NO;
     }
@@ -174,10 +174,10 @@ andTotalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWriteInput
 
 - (BOOL) isHittingErrorConnectingToServer {
     if(self.lastErrorMessage) {
-        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorRedirectToNonExistentLocation]].location != NSNotFound \
-            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %zd)", NSURLErrorBadServerResponse]].location != NSNotFound \
-            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorZeroByteResource]].location != NSNotFound \
-            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", NSURLErrorTimedOut]].location != NSNotFound;
+        return [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", (long)NSURLErrorRedirectToNonExistentLocation]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", (long)NSURLErrorBadServerResponse]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", (long)NSURLErrorZeroByteResource]].location != NSNotFound \
+            || [self.lastErrorMessage rangeOfString:[NSString stringWithFormat:@"(Code %ld)", (long)NSURLErrorTimedOut]].location != NSNotFound;
     } else {
         return NO;
     }//end else
